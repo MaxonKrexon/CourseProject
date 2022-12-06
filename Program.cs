@@ -12,16 +12,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.User.AllowedUserNameCharacters = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM ";
+})
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAuthentication()
-    .AddGoogle(options => {
+    .AddGoogle(options =>
+    {
         options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
         options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     })
-    .AddMicrosoftAccount(options => {
+    .AddMicrosoftAccount(options =>
+    {
         options.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"];
         options.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"];
     });

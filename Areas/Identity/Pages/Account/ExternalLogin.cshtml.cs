@@ -28,6 +28,7 @@ namespace FreshSight.Areas.Identity.Pages.Account
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
@@ -35,7 +36,8 @@ namespace FreshSight.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -43,6 +45,7 @@ namespace FreshSight.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -82,7 +85,7 @@ namespace FreshSight.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [StringLength(64, MinimumLength = 2)]
+            [StringLength(64,ErrorMessage = "Name shoud be from {2} to {1} letters long and contain only English characters", MinimumLength = 2)]
             public string Name { get; set; }
 
             [Required]
@@ -157,6 +160,11 @@ namespace FreshSight.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+
+                if(!await _roleManager.RoleExistsAsync("default")){
+                    await _roleManager.CreateAsync(new IdentityRole("default"));
+                }
+
                 await _userManager.AddToRoleAsync(user, "default");
                 await _userStore.SetUserNameAsync(user, Input.Name, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

@@ -65,6 +65,10 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [DataType(DataType.Date)]
+            [Display(Name = "Date of birth")]
+            public DateOnly DateOfBirth { get; set; }
         }
 
         private async Task LoadAsync(IdentityUser user)
@@ -107,7 +111,7 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
-
+            
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
@@ -117,6 +121,10 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
                 }
+            }
+
+            if(Input.Name != user.UserName){
+                await _userManager.SetUserNameAsync(user, Input.Name);
             }
 
             await _signInManager.RefreshSignInAsync(user);

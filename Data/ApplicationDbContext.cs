@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using FreshSight.Models;
 
 namespace FreshSight.Data;
 
-public class ApplicationDbContext : IdentityDbContext
+public class ApplicationDbContext : IdentityDbContext<AppUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
-}
 
-// dotnet aspnet-codegenerator identity -dc WEBAPPTASK4.Data.ApplicationDbContext --files "Account.Register;Account.Login"
+    public DbSet<AppUser>? Users {get; set;}
+}
