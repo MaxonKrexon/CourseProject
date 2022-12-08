@@ -17,6 +17,6 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
         
     }
 
-    public override DbSet<AppUser> Users {get; set;}
+    public override DbSet<AppUser>? Users {get; set;}
 
 }

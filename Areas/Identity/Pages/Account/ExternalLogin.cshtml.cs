@@ -17,27 +17,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using FreshSight.Models;
 
 namespace FreshSight.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IUserStore<AppUser> _userStore;
+        private readonly IUserEmailStore<AppUser> _emailStore;
         private readonly IEmailSender _emailSender;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        // private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
+            SignInManager<AppUser> signInManager,
+            UserManager<AppUser> userManager,
+            IUserStore<AppUser> userStore,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            IEmailSender emailSender
+            /*RoleManager<IdentityRole> roleManager*/)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -45,7 +46,7 @@ namespace FreshSight.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
-            _roleManager = roleManager;
+            // _roleManager = roleManager;
         }
 
         /// <summary>
@@ -161,11 +162,11 @@ namespace FreshSight.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                if(!await _roleManager.RoleExistsAsync("default")){
-                    await _roleManager.CreateAsync(new IdentityRole("default"));
-                }
+                // if(!await _roleManager.RoleExistsAsync("default")){
+                //     await _roleManager.CreateAsync(new IdentityRole("default"));
+                // }
 
-                await _userManager.AddToRoleAsync(user, "default");
+                // await _userManager.AddToRoleAsync(user, "default");
                 await _userStore.SetUserNameAsync(user, Input.Name, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
@@ -210,27 +211,27 @@ namespace FreshSight.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private AppUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<AppUser>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(AppUser)}'. " +
+                    $"Ensure that '{nameof(AppUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
+        private IUserEmailStore<AppUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserEmailStore<AppUser>)_userStore;
         }
     }
 }

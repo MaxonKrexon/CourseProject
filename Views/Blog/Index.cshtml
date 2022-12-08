@@ -1,0 +1,23 @@
+@using FreshSight.Controllers
+@{
+    ViewData["Title"] = "My blog";
+}
+<div>
+    <div class="d-inline-flex">
+        <img src="images/picture.jpg" alt="Profile picture" style="border-radius: 70px;" width="140" height="140">
+    </div>
+    <div class="d-inline-flex">
+        <h3>@User.Identity?.Name</h3>
+    </div>
+</div>
+<div class = "row">
+    <div class = "col-md-4">
+        <h3>Tools</h3>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item"><a class="btn btn-info" asp-area="" asp-controller="Blog" asp-action="Edit" role="button">New post</a></li>
+        </ul>
+    </div>
+    <div class = "col-md-6 col-md-offset-2">
+        <h3>Posts</h3>
+    </div>
+</div>

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using FreshSight.Models;
+using FreshSight.Data;
 
 namespace FreshSight.Areas.Identity.Pages.Account.Manage
 {
@@ -16,13 +18,16 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly ApplicationDbContext _db;
 
         public IndexModel(
             UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager)
+            SignInManager<AppUser> signInManager,
+            ApplicationDbContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _db = db;
         }
 
         /// <summary>
@@ -68,7 +73,7 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
 
             [DataType(DataType.Date)]
             [Display(Name = "Date of birth")]
-            public DateOnly DateOfBirth { get; set; }
+            public DateTime? DateOfBirth { get; set; }
         }
 
         private async Task LoadAsync(AppUser user)
@@ -76,13 +81,15 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var name = await _userManager.GetUserNameAsync(user);
+            DateTime? dob = user.DateOfBirth;
 
             Email = email;
 
             Input = new InputModel
             {
                 Name = name,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                DateOfBirth = dob
             };
         }
 
@@ -125,6 +132,11 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
 
             if(Input.Name != user.UserName){
                 await _userManager.SetUserNameAsync(user, Input.Name);
+            }
+
+            if(Input.DateOfBirth != user.DateOfBirth){
+                user.DateOfBirth = Input.DateOfBirth;
+                _db.SaveChanges();
             }
 
             await _signInManager.RefreshSignInAsync(user);
