@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "7NRD39WfZp82b/w346TuCKV5L4VCTMm+CAnMnN1qixg=",
+  "Hash": "bjjWNZhdNSLRP84xdvPxQtCUcmQ9mTERMydmI558tvU=",
   "Source": "FreshSight",
   "BasePath": "_content/FreshSight",
   "Mode": "Default",
@@ -2106,23 +2106,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/lib/jquery/LICENSE.txt"
-    },
-    {
-      "Identity": "/home/maxon/Documents/FreshSight/wwwroot/uploaded/BingWallpaper.jpg",
-      "SourceId": "FreshSight",
-      "SourceType": "Discovered",
-      "ContentRoot": "/home/maxon/Documents/FreshSight/wwwroot/",
-      "BasePath": "_content/FreshSight",
-      "RelativePath": "uploaded/BingWallpaper.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/uploaded/BingWallpaper.jpg"
     }
   ]
 }

@@ -8,13 +8,10 @@ namespace FreshSight.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private Microsoft.AspNetCore.Hosting.IHostingEnvironment _env;
 
-    public HomeController(ILogger<HomeController> logger,
-    Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
+    public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
-        _env = env;
     }
 
     public IActionResult Index()
