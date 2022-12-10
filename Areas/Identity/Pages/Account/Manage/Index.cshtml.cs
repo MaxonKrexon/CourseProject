@@ -2,15 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using FreshSight.Models;
 using FreshSight.Data;
+using Azure.Storage.Blobs;
+using Newtonsoft.Json;
 
 namespace FreshSight.Areas.Identity.Pages.Account.Manage
 {
@@ -30,6 +29,13 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
             _db = db;
         }
 
+        static String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
+        static String containerName = "images";
+        BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
+
+        public Azure.Pageable<Azure.Storage.Blobs.Models.BlobItem> pic { get; set; }
+
+        public String PicLink = String.Empty;
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -78,6 +84,7 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(AppUser user)
         {
+
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var name = await _userManager.GetUserNameAsync(user);
@@ -91,6 +98,18 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
                 PhoneNumber = phoneNumber,
                 DateOfBirth = dob
             };
+
+            pic = containerClient.GetBlobs(prefix: $"{user.Id}_pic");
+
+            String picName = String.Empty;
+            if (pic.Count() != 0)
+            {
+                picName = user.Id;
+            }
+            else picName = "default";
+
+            PicLink = $"https://freshsightcloud.blob.core.windows.net/images/{picName}_pic";
+
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -118,7 +137,7 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
-            
+
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
@@ -130,11 +149,13 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            if(Input.Name != user.UserName){
+            if (Input.Name != user.UserName)
+            {
                 await _userManager.SetUserNameAsync(user, Input.Name);
             }
 
-            if(Input.DateOfBirth != user.DateOfBirth){
+            if (Input.DateOfBirth != user.DateOfBirth)
+            {
                 user.DateOfBirth = Input.DateOfBirth;
                 _db.SaveChanges();
             }

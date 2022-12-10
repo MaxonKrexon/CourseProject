@@ -12,65 +12,6 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <p><h2>Content<h2></p>
-        <div class="text-center">
-            <form method="post" enctype="multipart/form-data">
-                <div id="fileBasket" class="filebasket bg-secondary" style="height: 150px; width: 450px;">
-                    Drag-n-Drop files here.
-                </div>
-                <br />
-            </form>
-        </div>
+        
     </div>
 </div>
-
-@section Scripts{
-<script>
-$(document).ready(function () {
-
-    $("#progress").hide();
-
-    $("#fileBasket").on("dragenter", function (evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-    });
-
-    $("#fileBasket").on("dragover", function (evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-    });
-
-    $("#fileBasket").on("drop", function (evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        var files = evt.originalEvent.dataTransfer.files;
-            var fileNames = "";
-            if (files.length > 0) {
-                fileNames += "Uploading <br/>"
-                for (var i = 0; i < files.length; i++) {
-                    fileNames += files[i].name + "<br />";
-                }
-            }
-            $("#fileBasket").html(fileNames)
-        
-            var data = new FormData();
-            for (var i = 0; i < files.length; i++) {
-                data.append(files[i].name, files[i]);
-            }
-            $.ajax({
-                type: "POST",
-                url: "/home/UploadFiles",
-                contentType: false,
-                processData: false,
-                data: data,
-                success: function (message) {
-                    $("#fileBasket").html(message);
-                },
-                error: function () {
-                    $("#fileBasket").html
-                        ("There was error uploading files!");
-                },
-            });
-        });
-    });
-</script>
-}

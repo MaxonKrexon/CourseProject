@@ -1,23 +1,31 @@
 @using FreshSight.Controllers
 @{
     ViewData["Title"] = "My blog";
+    var ProfilePicLink = Model["PicLink"];
 }
-<div>
+<div class="border-bottom">
     <div class="d-inline-flex">
-        <img src="images/picture.jpg" alt="Profile picture" style="border-radius: 70px;" width="140" height="140">
+        <img src="@ProfilePicLink" alt="Profile picture" style="border-radius: 75px; height: 150px; width: 150px;">
     </div>
     <div class="d-inline-flex">
-        <h3>@User.Identity?.Name</h3>
+        <h3>@User.Identity?.Name</h3> 
+    </div>
+    <div class="d-inline-flex">
+    @if(Model.ContainsKey("Age"))
+    {
+     <h4>Age: @Model["Age"]</h4>
+    }
     </div>
 </div>
+<br />
 <div class = "row">
-    <div class = "col-md-4">
+    <div class = "col-md-4 border">
         <h3>Tools</h3>
         <ul class="nav nav-pills flex-column">
             <li class="nav-item"><a class="btn btn-info" asp-area="" asp-controller="Blog" asp-action="Edit" role="button">New post</a></li>
         </ul>
     </div>
-    <div class = "col-md-6 col-md-offset-2">
+    <div class = "col-md-6 col-md-offset-2 border">
         <h3>Posts</h3>
     </div>
 </div>
