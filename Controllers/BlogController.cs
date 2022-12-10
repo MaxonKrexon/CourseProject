@@ -22,22 +22,22 @@ public class BlogController : Controller
     static String containerName = "images";
     BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
     public Dictionary<String, String> Properties = new Dictionary<string, string>();
-    public Azure.Pageable<Azure.Storage.Blobs.Models.BlobItem> pic { get; set; }
+    public Azure.Pageable<Azure.Storage.Blobs.Models.BlobItem>? pic { get; set; }
 
     public async Task<IActionResult> Index()
     {
         if (_signInManager.IsSignedIn(User))
-        {
-            String ProfilePic = String.Empty;
+        {         
             var user = await _signInManager.UserManager.GetUserAsync(User);
-            pic = containerClient.GetBlobs(prefix: $"{user.Id}_pic");
+
             if(user.DateOfBirth != null){
-                
                 var span = DateTime.Now.Subtract((DateTime)user.DateOfBirth);
                 var age = span.Days / 365;
                 Properties.Add("Age",age.ToString());
             }
 
+            String ProfilePic = String.Empty;
+            pic = containerClient.GetBlobs(prefix: $"{user.Id}_pic");
             String picName = String.Empty;
             if (pic.Count() != 0)
             {
@@ -56,7 +56,7 @@ public class BlogController : Controller
         }
     }
 
-    public IActionResult Edit()
+    public IActionResult Post()
     {
         return View();
     }

@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "New post";
+}
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js" integrity="sha512-kgVu9aLe37SBAbGR4rnzWTNjHe+DLO79CDASbf3XIJNUTR82SuJhKTwwQyNQ4UGXnvd9XpiXcv1HXZ4m83KmPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" integrity="sha512-GUYp9smrcOHdOrjt2PBcLb7MZkO6EQxUQPtNsTcTmC+slgCv+EcFkL9gIk4CqrmCnV+NnewdEThCmWpnKIBV9w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.dark.rtl.min.css" integrity="sha512-Ng3PnLMNfd3q6nKUKf8i2PBg2RPrKUXsZv9fQa/4zkBR1xIUdhxeiveaIRVYXQZOWYWuNwQ/Umitq9srS7vDGg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" integrity="sha512-GUYp9smrcOHdOrjt2PBcLb7MZkO6EQxUQPtNsTcTmC+slgCv+EcFkL9gIk4CqrmCnV+NnewdEThCmWpnKIBV9w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.rtl.min.css" integrity="sha512-Klb+XB+D9zvBpBHoKqqDpSieg9msEzFxK68bYCTMojLUwyn5Ia1rEsapNFSB8pUafbRy5wM4tBXQJem8dvgcow==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<h2>New post</h2>
+
+
+<form method="post" asp-controller="Blog" asp-action="Post">
+    <div class="row mb-4">
+        <div class="col">
+            <div class="form-outline">
+                <input type="text" id="Topic" class="form-control border" />
+                <label class="form-label" for="Topic">Topic</label>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-outline">
+                <input type="text" id="Category" class="form-control border" />
+                <label class="form-label" for="Category">Category</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-outline mb-4">
+        <textarea class="form-control border" id="Text" rows="4"></textarea>
+        <label class="form-label" for="Text">Your content</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block mb-4">
+    Submit
+    </button>
+</form>
