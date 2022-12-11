@@ -12,28 +12,154 @@
 <h2>New post</h2>
 
 
+
 <form method="post" asp-controller="Blog" asp-action="Post">
     <div class="row mb-4">
         <div class="col">
             <div class="form-outline">
-                <input type="text" id="Topic" class="form-control border" />
+                <input type="text" id="Topic" name = "Topic" class="form-control border" />
                 <label class="form-label" for="Topic">Topic</label>
             </div>
         </div>
         <div class="col">
             <div class="form-outline">
-                <input type="text" id="Category" class="form-control border" />
+                <input type="text" id="Category" name = "Category" class="form-control border" />
                 <label class="form-label" for="Category">Category</label>
             </div>
         </div>
     </div>
 
     <div class="form-outline mb-4">
-        <textarea class="form-control border" id="Text" rows="4"></textarea>
+        <textarea class="form-control border" id="Text" name = "Text" rows="4"></textarea>
         <label class="form-label" for="Text">Your content</label>
     </div>
 
-    <button type="submit" class="btn btn-primary btn-block mb-4">
+    
+
+    <div class="row mb-4">
+        <div class="d-inline-block w-25">
+        <form id="ThumbnailUpload">
+            <button type="submit" form = "ThumbnailUpload" id="AddThumbnail" class = "align-center btn btn-info rounded-pill" style="height: 30px;">Add thumbnail</button>
+                <div id = "ThumbnailDnD" style="visibility: hidden;">
+                    <form method="post" enctype="multipart/form-data">
+                        <div id="thumbnail" class="filebasket text-center text-bg-light border" style="height: 100px;">
+                            Drag-n-Drop your thumbnail here!
+                        </div>
+                    </form>
+                </div>
+            </form>
+        </div>
+        <div class="d-inline-block w-75">
+            <form method="post" enctype="multipart/form-data">
+                <div id="fileBasket" class="filebasket mb-4 text-center text-bg-light border" style="height: 130px;">
+                    Drag-n-Drop your pictures here!
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block mb-2">
     Submit
     </button>
 </form>
+
+@section Scripts{
+<partial name="_ValidationScriptsPartial" />
+<script>
+$(document).ready(function () {
+    $("#AddThumbnail").click(function(){
+        $("#ThumbnailDnD").css("visibility", "visible");
+    })
+
+    $("#fileBasket").on("dragenter", function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+    });
+
+    $("#fileBasket").on("dragover", function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+    });
+
+    $("#fileBasket").on("drop", function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        var files = evt.originalEvent.dataTransfer.files;
+            var fileNames = "";
+            if (files.length > 0) {
+                fileNames += "Uploading <br/>"
+                for (var i = 0; i < files.length; i++) {
+                    fileNames += files[i].name + "<br />";
+                }
+            
+            $("#fileBasket").html(fileNames)
+        
+            var data = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                data.append(files[i].name, files[i]);
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Blog/PostContent",
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function () {
+                    $("#fileBasket").html("Success!");
+                    location.reload(true);
+                },
+                error: function () {
+                    $("#fileBasket").html("There was error uploading files!");
+                },
+            });
+            }
+        });
+    });
+
+    $("#AddThumbnail").on("dragenter", function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+    });
+
+    $("#AddThumbnail").on("dragover", function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+    });
+
+    $("#AddThumbnail").on("drop", function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        var files = evt.originalEvent.dataTransfer.files;
+            var fileNames = "";
+            if (files.length == 1)
+            {
+                fileNames += "Uploading <br/>"
+                fileNames += files[0].name;
+            }
+            
+            $("#AddThumbnail").html(fileNames)
+        
+            var data = new FormData();
+            data.append("thumbnail", files[0]);
+
+            $.ajax({
+                type: "POST",
+                url: "/Blog/PostContent",
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function () {
+                    $("#AddThumbnail").html("Success!");
+                    location.reload(true);
+                },
+                error: function () {
+                    $("#AddThumbnail").html("There was error uploading files!");
+                },
+            });
+            }
+            else {
+                $("#AddThumbnail").html("There can be only one thumbnail pic!");
+            }
+        });
+</script>
+}

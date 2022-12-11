@@ -31,7 +31,6 @@ public class AccountController : Controller
     [HttpPost]
     public void UploadFiles()
     {
-        String message = String.Empty;
         var files = Request.Form.Files;
         if (files.Count == 1)
         {
