@@ -1,37 +1,31 @@
 @{
     ViewData["Title"] = "New post";
 }
-<head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js" integrity="sha512-kgVu9aLe37SBAbGR4rnzWTNjHe+DLO79CDASbf3XIJNUTR82SuJhKTwwQyNQ4UGXnvd9XpiXcv1HXZ4m83KmPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" integrity="sha512-GUYp9smrcOHdOrjt2PBcLb7MZkO6EQxUQPtNsTcTmC+slgCv+EcFkL9gIk4CqrmCnV+NnewdEThCmWpnKIBV9w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.dark.rtl.min.css" integrity="sha512-Ng3PnLMNfd3q6nKUKf8i2PBg2RPrKUXsZv9fQa/4zkBR1xIUdhxeiveaIRVYXQZOWYWuNwQ/Umitq9srS7vDGg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" integrity="sha512-GUYp9smrcOHdOrjt2PBcLb7MZkO6EQxUQPtNsTcTmC+slgCv+EcFkL9gIk4CqrmCnV+NnewdEThCmWpnKIBV9w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.rtl.min.css" integrity="sha512-Klb+XB+D9zvBpBHoKqqDpSieg9msEzFxK68bYCTMojLUwyn5Ia1rEsapNFSB8pUafbRy5wM4tBXQJem8dvgcow==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
+
 
 <h2>New post</h2>
 
 
 
-<form method="post" asp-controller="Blog" asp-action="Post">
-    <div class="row mb-4">
+<form method="post" asp-controller="Post" asp-action="Index" id="Content">
+    <div class="row">
         <div class="col">
-            <div class="form-outline">
-                <input type="text" id="Topic" name = "Topic" class="form-control border" />
-                <label class="form-label" for="Topic">Topic</label>
+            <div>
+                <label for="Topic">Topic</label>
+                <input type="text" id="Topic" name = "Topic" class="border" />
             </div>
         </div>
         <div class="col">
-            <div class="form-outline">
-                <input type="text" id="Category" name = "Category" class="form-control border" />
-                <label class="form-label" for="Category">Category</label>
+            <div>
+                <label for="Category">Category</label>
+                <input type="text" id="Category" name = "Category" class="border" />
             </div>
         </div>
     </div>
 
-    <div class="form-outline mb-4">
-        <textarea class="form-control border" id="Text" name = "Text" rows="4"></textarea>
-        <label class="form-label" for="Text">Your content</label>
+    <div>
+        <textarea class="border" style="height: 350px; width: 600px" id="Text" name = "Text"></textarea>
+        <label for="Text">Your content</label>
     </div>
 
     
@@ -58,7 +52,7 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary btn-block mb-2">
+    <button type="submit" form="Content" class="btn btn-primary btn-block mb-2">
     Submit
     </button>
 </form>
@@ -100,13 +94,12 @@ $(document).ready(function () {
             }
             $.ajax({
                 type: "POST",
-                url: "/Blog/PostContent",
+                url: "/Post/UploadToServer",
                 contentType: false,
                 processData: false,
                 data: data,
                 success: function () {
                     $("#fileBasket").html("Success!");
-                    location.reload(true);
                 },
                 error: function () {
                     $("#fileBasket").html("There was error uploading files!");
@@ -116,17 +109,17 @@ $(document).ready(function () {
         });
     });
 
-    $("#AddThumbnail").on("dragenter", function (evt) {
+    $("#thumbnail").on("dragenter", function (evt) {
         evt.preventDefault();
         evt.stopPropagation();
     });
 
-    $("#AddThumbnail").on("dragover", function (evt) {
+    $("#thumbnail").on("dragover", function (evt) {
         evt.preventDefault();
         evt.stopPropagation();
     });
 
-    $("#AddThumbnail").on("drop", function (evt) {
+    $("#thumbnail").on("drop", function (evt) {
         evt.preventDefault();
         evt.stopPropagation();
         var files = evt.originalEvent.dataTransfer.files;
@@ -135,31 +128,29 @@ $(document).ready(function () {
             {
                 fileNames += "Uploading <br/>"
                 fileNames += files[0].name;
-            }
             
-            $("#AddThumbnail").html(fileNames)
+            $("#thumbnail").html(fileNames)
         
             var data = new FormData();
             data.append("thumbnail", files[0]);
 
             $.ajax({
                 type: "POST",
-                url: "/Blog/PostContent",
+                url: "/Post/UploadToServer",
                 contentType: false,
                 processData: false,
                 data: data,
                 success: function () {
-                    $("#AddThumbnail").html("Success!");
-                    location.reload(true);
+                    $("#thumbnail").html("Success!");
                 },
                 error: function () {
-                    $("#AddThumbnail").html("There was error uploading files!");
+                    $("#thumbnail").html("There was error uploading files!");
                 },
             });
             }
             else {
-                $("#AddThumbnail").html("There can be only one thumbnail pic!");
+                $("#thumbnail").html("There can be only one thumbnail pic!");
             }
-        });
+    });
 </script>
 }

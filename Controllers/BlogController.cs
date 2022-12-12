@@ -21,39 +21,19 @@ public class BlogController : Controller
         _signInManager = signInManager;
         _userManager = userManager;
     }
-    static String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
-    static String containerName = "images";
-    BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
-    public Dictionary<String, String> Properties = new Dictionary<string, string>();
+    public Dictionary<String, String[]> Properties = new Dictionary<string, string[]>();
     public Azure.Pageable<Azure.Storage.Blobs.Models.BlobItem>? pic { get; set; }
+    static String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
 
     public async Task<IActionResult> Index()
     {
         if (_signInManager.IsSignedIn(User))
         {
-            String containerName = "images";
-            BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
             var user = await _signInManager.UserManager.GetUserAsync(User);
+            GetUserAge(user);
+            GetUserPic(user);
+            GetUserPosts(user);
 
-            if (user.DateOfBirth != null)
-            {
-                var span = DateTime.Now.Subtract((DateTime)user.DateOfBirth);
-                var age = span.Days / 365;
-                Properties.Add("Age", age.ToString());
-            }
-
-            String ProfilePic = String.Empty;
-            pic = containerClient.GetBlobs(prefix: $"{user.Id}_pic");
-            String picName = String.Empty;
-            if (pic.Count() != 0)
-            {
-                picName = user.Id;
-            }
-            else picName = "default";
-
-            ProfilePic = $"https://freshsightcloud.blob.core.windows.net/images/{picName}_pic";
-
-            Properties.Add("PicLink", ProfilePic);
             return View(Properties);
         }
         else
@@ -61,55 +41,51 @@ public class BlogController : Controller
             return Redirect("~/Identity/Account/Login");
         }
     }
-
-    public IActionResult Post(String Topic, String Category, String Text)
+    public void GetUserPic(AppUser user)
     {
-        return View();
+        String containerName = "images";
+        BlobContainerClient imagesCli = new BlobContainerClient(connectionString, containerName);
+        var ProfilePic = new String[1];
+        pic = imagesCli.GetBlobs(prefix: $"{user.Id}_pic");
+        String picName = String.Empty;
+        if (pic.Count() != 0)
+        {
+            picName = user.Id;
+        }
+        else picName = "default";
+
+        ProfilePic[0] = $"https://freshsightcloud.blob.core.windows.net/images/{picName}_pic";
+
+        Properties.Add("PicLink", ProfilePic);
     }
 
-    [HttpPost]
-    public async void PostContent()
+
+    public void GetUserPosts(AppUser user)
     {
         String containerName = "posts";
-        BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
-
-        var user = await _signInManager.UserManager.GetUserAsync(User);
-
-        Post post = new Post();
-        Guid postId = new Guid();
-        post.ID = postId.ToString();
-        post.Author = user;
-
-        var files = Request.Form.Files;
-
-        int index = 0;
-        foreach (var file in files)
+        BlobContainerClient postsCli = new BlobContainerClient(connectionString, containerName);
+        if (user.Posts != null)
         {
-
-            String filename = $"wwwroot/uploaded/{file.Name}";
-
-            using (FileStream fs = System.IO.File.Create(filename))
+            foreach (var userPost in user.Posts)
             {
-                file.CopyTo(fs);
-                fs.Flush();
+                var postProps = new String[3];
+                postProps[0] = userPost.ID;
+                postProps[1] = userPost.Topic;
+                postProps[2] = userPost.Category;
+                Properties.Add("Posts", postProps);
             }
+        }
 
-            using (MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(filename)))
-            {
-                String BlobName = String.Empty;
-                if (file.Name == "thumbnail")
-                {
-                    BlobName = $"{postId}_thumb";
-                }
-                else BlobName = $"{postId}_{index}";
+    }
 
-                containerClient.DeleteBlobIfExists(blobName: BlobName);
-                containerClient.UploadBlob(blobName: BlobName, content: ms);
 
-                ms.Flush();
-                System.IO.File.Delete(filename);
-            }
-            index++;
+    public void GetUserAge(AppUser user)
+    {
+        if (user.DateOfBirth != null)
+        {
+            var span = DateTime.Now.Subtract((DateTime)user.DateOfBirth);
+            var age = new String[] { (span.Days / 365).ToString() };
+            Properties.Add("Age", age);
         }
     }
 

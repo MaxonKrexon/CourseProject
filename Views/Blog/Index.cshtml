@@ -1,7 +1,7 @@
 @using FreshSight.Controllers
 @{
     ViewData["Title"] = "My blog";
-    var ProfilePicLink = Model["PicLink"];
+    var ProfilePicLink = Model["PicLink"][0];
 }
 <div class="border-bottom">
     <div class="d-inline-flex">
@@ -13,7 +13,7 @@
     <div class="d-inline-flex">
     @if(Model.ContainsKey("Age"))
     {
-     <h4>Age: @Model["Age"]</h4>
+     <h4>Age: @Model["Age"][0]</h4>
     }
     </div>
 </div>
@@ -22,10 +22,23 @@
     <div class = "col-md-4 border">
         <h3>Tools</h3>
         <ul class="nav nav-pills flex-column">
-            <li class="nav-item"><a class="btn btn-info" asp-area="" asp-controller="Blog" asp-action="Post" role="button">New post</a></li>
+            <li class="nav-item"><a class="btn btn-info" asp-area="" asp-controller="Post" asp-action="Index" role="button">New post</a></li>
         </ul>
     </div>
     <div class = "col-md-6 col-md-offset-2 border">
-        <h3>Posts</h3>
+        <h3>Your posts</h3>
+        @if(Model.ContainsKey("Posts")){
+        foreach(var post in Model["Posts"]){
+            String link = $"https://freshsightcloud.blob.core.windows.net/images/{post[0]}_thumb";    
+            <div class = "row border">
+                <div class="col-md-2">
+                    <img src="@link" style="height: 150px; width: 300px;">
+                </div>
+                <div class="col-md-4 col-md-offset-2">
+                    Category: @post[1] <h3>@post[2]<h3>
+                </div>
+            </div>
+        }
+        }
     </div>
 </div>

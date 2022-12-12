@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "bjjWNZhdNSLRP84xdvPxQtCUcmQ9mTERMydmI558tvU=",
+  "Hash": "u8HPNsw3ysAJLaneIwHJNjB8QIGMKHIU9eKJbpckcdo=",
   "Source": "FreshSight",
   "BasePath": "_content/FreshSight",
   "Mode": "Default",
@@ -2106,6 +2106,57 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/lib/jquery/LICENSE.txt"
+    },
+    {
+      "Identity": "/home/maxon/Documents/FreshSight/wwwroot/uploaded/_0",
+      "SourceId": "FreshSight",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/maxon/Documents/FreshSight/wwwroot/",
+      "BasePath": "_content/FreshSight",
+      "RelativePath": "uploaded/_0",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/uploaded/_0"
+    },
+    {
+      "Identity": "/home/maxon/Documents/FreshSight/wwwroot/uploaded/_1",
+      "SourceId": "FreshSight",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/maxon/Documents/FreshSight/wwwroot/",
+      "BasePath": "_content/FreshSight",
+      "RelativePath": "uploaded/_1",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/uploaded/_1"
+    },
+    {
+      "Identity": "/home/maxon/Documents/FreshSight/wwwroot/uploaded/_thumb",
+      "SourceId": "FreshSight",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/maxon/Documents/FreshSight/wwwroot/",
+      "BasePath": "_content/FreshSight",
+      "RelativePath": "uploaded/_thumb",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/uploaded/_thumb"
     }
   ]
 }
