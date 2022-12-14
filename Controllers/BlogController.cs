@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using FreshSight.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Azure.Storage.Blobs;
+using FreshSight.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FreshSight.Controllers;
 
@@ -12,16 +14,19 @@ public class BlogController : Controller
     private readonly ILogger<BlogController> _logger;
     private readonly SignInManager<AppUser> _signInManager;
     private readonly UserManager<AppUser> _userManager;
+    private readonly ApplicationDbContext _db;
 
     public BlogController(ILogger<BlogController> logger,
     SignInManager<AppUser> signInManager,
-    UserManager<AppUser> userManager)
+    UserManager<AppUser> userManager,
+    ApplicationDbContext db)
     {
         _logger = logger;
         _signInManager = signInManager;
         _userManager = userManager;
+        _db = db;
     }
-    public Dictionary<String, String[]> Properties = new Dictionary<string, string[]>();
+    public Dictionary<String, String[,]> Properties = new Dictionary<string, string[,]>();
     public Azure.Pageable<Azure.Storage.Blobs.Models.BlobItem>? pic { get; set; }
     static String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
 
@@ -29,7 +34,7 @@ public class BlogController : Controller
     {
         if (_signInManager.IsSignedIn(User))
         {
-            var user = await _signInManager.UserManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             GetUserAge(user);
             GetUserPic(user);
             GetUserPosts(user);
@@ -45,7 +50,7 @@ public class BlogController : Controller
     {
         String containerName = "images";
         BlobContainerClient imagesCli = new BlobContainerClient(connectionString, containerName);
-        var ProfilePic = new String[1];
+        var ProfilePic = new String[1, 1];
         pic = imagesCli.GetBlobs(prefix: $"{user.Id}_pic");
         String picName = String.Empty;
         if (pic.Count() != 0)
@@ -54,7 +59,7 @@ public class BlogController : Controller
         }
         else picName = "default";
 
-        ProfilePic[0] = $"https://freshsightcloud.blob.core.windows.net/images/{picName}_pic";
+        ProfilePic[0, 0] = $"https://freshsightcloud.blob.core.windows.net/images/{picName}_pic";
 
         Properties.Add("PicLink", ProfilePic);
     }
@@ -64,18 +69,18 @@ public class BlogController : Controller
     {
         String containerName = "posts";
         BlobContainerClient postsCli = new BlobContainerClient(connectionString, containerName);
-        if (user.Posts != null)
+        var userPosts = _db.Posts.Where(p => p.Author.Id == user.Id).ToList();
+        if (userPosts.Count() > 0)
         {
-            foreach (var userPost in user.Posts)
+            foreach (var userPost in userPosts)
             {
-                var postProps = new String[3];
-                postProps[0] = userPost.ID;
-                postProps[1] = userPost.Topic;
-                postProps[2] = userPost.Category;
+                var postProps = new String[1, 3];
+                postProps[0, 0] = userPost.ID;
+                postProps[0, 1] = userPost.Topic;
+                postProps[0, 2] = userPost.Category;
                 Properties.Add("Posts", postProps);
             }
         }
-
     }
 
 
@@ -84,7 +89,8 @@ public class BlogController : Controller
         if (user.DateOfBirth != null)
         {
             var span = DateTime.Now.Subtract((DateTime)user.DateOfBirth);
-            var age = new String[] { (span.Days / 365).ToString() };
+            var age = new String[1, 1];
+            age[0, 0] = (span.Days / 365).ToString();
             Properties.Add("Age", age);
         }
     }

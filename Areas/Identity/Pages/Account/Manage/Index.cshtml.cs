@@ -157,7 +157,7 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
             if (Input.DateOfBirth != user.DateOfBirth)
             {
                 user.DateOfBirth = Input.DateOfBirth;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
             }
 
             await _signInManager.RefreshSignInAsync(user);

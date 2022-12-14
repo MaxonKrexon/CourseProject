@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using FreshSight.Models;
+using Azure.Storage.Blobs;
 
 namespace FreshSight.Areas.Identity.Pages.Account.Manage
 {
@@ -87,6 +88,12 @@ namespace FreshSight.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            
+            String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
+            String containerName = "images";
+            BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
+            await containerClient.DeleteBlobIfExistsAsync($"{user.Id}_pic");
+            
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)

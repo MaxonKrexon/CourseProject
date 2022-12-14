@@ -33,9 +33,11 @@ public class PostController : Controller
     }
 
     [HttpPost]
-    public IActionResult Index(String Topic, String Category, String Text, Post post)
+    public async Task<RedirectToPageResult> Index(String Topic, String Category, String Text, Post post)
     {   
-        Guid postId = new Guid();
+        AppUser user = await _userManager.GetUserAsync(User); 
+
+        Guid postId = Guid.NewGuid();
         post.ID = postId.ToString();
         post.Topic = Topic;
         post.Category = Category;
@@ -43,34 +45,33 @@ public class PostController : Controller
         String textfile = $"wwwroot/uploaded/_text";
         System.IO.File.CreateText(textfile);
         System.IO.File.WriteAllText(textfile, Text);
-        UploadToCloud(post);
+        UploadToCloud(post, user);
         return RedirectToPage("/Blog/Index");
     }
 
-    public async void UploadToCloud(Post post)
+    public async void UploadToCloud(Post post, AppUser user)
     {
-
-        var user = await _signInManager.UserManager.GetUserAsync(User);
         post.Author = user;
 
         String containerName = "posts";
         BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
+        
         String dir = $"wwwroot/uploaded/";
         var files = Directory.GetFiles(dir);
+
         foreach (var file in files)
         {
-            String filename = dir + post.ID + file;
-            using (MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(filename)))
+            using (MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(file)))
             {
-                containerClient.DeleteBlobIfExists(blobName: filename);
-                containerClient.UploadBlob(blobName: filename, content: ms);
-
+                String BlobName = post.ID + file.Split("/")[2];
+                containerClient.UploadBlob(blobName: BlobName, content: ms);
                 ms.Flush();
-                System.IO.File.Delete(filename);
+                System.IO.File.Delete(file);
             }
 
         }
-        user.Posts.Append(post);
+
+        user.Posts.Add(post);
         _db.SaveChanges();
     }
 

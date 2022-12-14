@@ -7,5 +7,5 @@ public class Post {
     public String? Category {get;set;}
     public DateTime CreationTime = DateTime.Now;
     public double? Rating {get; set;}
-    public IEnumerable<Comment>? Comments {get; set;}
+    public List<Comment>? Comments {get; set;} = new List<Comment>();
 }
