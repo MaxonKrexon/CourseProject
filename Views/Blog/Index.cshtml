@@ -25,43 +25,22 @@
             <li class="nav-item"><a class="btn btn-info" asp-area="" asp-controller="Post" asp-action="Index" role="button">New post</a></li>
         </ul>
     </div>
-    <div id = "posts" class = "col-md-6 col-md-offset-2 border">
-        <h3>Your posts</h3>
+    <div id = "posts" class = "col col-md-offset-2">
+        <div class="border-bottom border-dark">
+            <h3>Your posts</h3>
+        </div>
         @if(Model.ContainsKey("Posts")){
         foreach(var post in Model["Posts"]){
             String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post[0]}_thumb";    
-            <div class ="row border" style="offset: auto;" id = "@post[0]">
-                <div class="col" id="@post[0]">
+                <a class="d-flex flex-row border nav-link text-dark" asp-area=""  asp-for="postId" asp-route-postId="@post[0]" asp-controller="Blog" asp-action="ViewPost">
+                <div>
                     <img src="@link" id="@post[0]" style="offset: auto; border-radius: 35px;height: 150px; width: 300px;">
                 </div>
-                <div class="col" id="@post[0]" style = "offset: auto;">
-                    Category: @post[1] <h3>@post[2]<h3>
+                <div style = "offset: auto;">
+                    Category: @post[1] <h3>@post[2]</h3>
                 </div>
-            </div>
+                </a>
         }
         }
     </div>
 </div>
-
-@section Scripts{
-    <script>
-        $("#posts").click(function(event){
-            var data = new FormData();
-            data.append("id",event.target.id);
-
-            $.ajax({
-                type: "POST",
-                url: "/Blog/ViewPost",
-                contentType: false,
-                processData: false,
-                data: data,
-                success: function () {
-                    //$("#fileBasket").html("Success!");
-                },
-                error: function () {
-                    $("#posts").html("Error occured");
-                },
-            });
-        });
-    </script>
-}

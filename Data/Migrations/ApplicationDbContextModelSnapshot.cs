@@ -118,17 +118,20 @@ namespace FreshSight.Data.Migrations
                     b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<double?>("AuthorGrade")
+                        .HasColumnType("float");
+
                     b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("Rating")
-                        .HasColumnType("float");
-
                     b.Property<string>("Topic")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("UserRating")
+                        .HasColumnType("float");
 
                     b.HasKey("ID");
 

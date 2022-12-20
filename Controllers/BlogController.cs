@@ -92,15 +92,14 @@ public class BlogController : Controller
         }
     }
 
-
-    [HttpPost]
-    public IActionResult ViewPost()
+    
+    public IActionResult ViewPost(String postId)
     {
-        var postId = Request.Form["id"].ToString();
-        var post = _db.Posts.Where(p => p.ID == postId);
+        var post = _db.Posts.Where(p => p.ID == postId).ToList()[0];
         return View(post);
-
     }
+
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

@@ -6,6 +6,7 @@ public class Post {
     public String? Topic {get;set;}
     public String? Category {get;set;}
     public DateTime CreationTime = DateTime.Now;
-    public double? Rating {get; set;}
+    public double? AuthorGrade {get; set;}
+    public double? UserRating {get; set;}
     public List<Comment>? Comments {get; set;} = new List<Comment>();
 }

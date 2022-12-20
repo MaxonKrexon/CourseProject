@@ -1,16 +1,31 @@
 @using FreshSight.Controllers
 @using Azure.Storage.Blobs;
+@using Azure.Storage.Blobs.Models;
+@using Azure.Storage.Blobs.Specialized;
 @{
+    ViewData["Title"] = $"Post: {Model.ID}";
+
     String containerName = "posts";
     String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
     BlobContainerClient cloud = new BlobContainerClient(connectionString, containerName);
-    var text = cloud.GetBlobs(prefix: $"{Model.ID}_text");
-    ViewData["Title"] = $"Post : {Model.ID}";
+    var textBlock = new BlockBlobClient(connectionString, containerName, $"{Model.ID}_text");
+    var thumbBlock = new BlockBlobClient(connectionString, containerName, $"{Model.ID}_thumb");
+    var text = textBlock.DownloadContent();
 }
 
-<h2>@Model.Topic</h2>
+<div id="Post header" class="row">
+    <div class="col">
+        <h2>@Model.Topic</h2>
+    </div>
+    <div class="col">
+        <i>Rating: @Model.Rating</i>
+    </div>
+</div>
 </h4>@Model.Category</h4>
 <br />
-@foreach(var line in text){
-    Console.WriteLine(line);
+@if(await thumbBlock.ExistsAsync()){
+    String link = $"https://freshsightcloud.blob.core.windows.net/posts/{Model.ID}_thumb";
+    <img src="@link" style="width: 445px; height: 250px; border-radius: 30px;">
 }
+<br />
+@text.Value.Content

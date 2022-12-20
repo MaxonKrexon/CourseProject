@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreshSight.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221212155207_Post-model-changes")]
-    partial class Postmodelchanges
+    [Migration("20221220171818_Post-model-rating-separation")]
+    partial class Postmodelratingseparation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -112,7 +112,7 @@ namespace FreshSight.Data.Migrations
 
                     b.HasIndex("PostID");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("FreshSight.Models.Post", b =>
@@ -120,23 +120,26 @@ namespace FreshSight.Data.Migrations
                     b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<double?>("AuthorGrade")
+                        .HasColumnType("float");
+
                     b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("Rating")
-                        .HasColumnType("float");
-
                     b.Property<string>("Topic")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("UserRating")
+                        .HasColumnType("float");
 
                     b.HasKey("ID");
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Post");
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

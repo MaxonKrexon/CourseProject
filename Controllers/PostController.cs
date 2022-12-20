@@ -33,7 +33,7 @@ public class PostController : Controller
     }
 
     [HttpPost]
-    public async Task<RedirectToPageResult> Index(String Topic, String Category, String Text, Post post)
+    public async Task<RedirectToPageResult> Index(String Topic, String Category, String Text, double authorGrade ,Post post)
     {   
         AppUser user = await _userManager.GetUserAsync(User); 
 
@@ -41,6 +41,7 @@ public class PostController : Controller
         post.ID = postId.ToString();
         post.Topic = Topic;
         post.Category = Category;
+        post.AuthorGrade = authorGrade;
 
         String textfile = $"wwwroot/uploaded/_text";
         System.IO.File.CreateText(textfile);

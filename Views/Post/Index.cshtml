@@ -2,29 +2,34 @@
     ViewData["Title"] = "New post";
 }
 
-
+<div>
 <h2>New post</h2>
-
-
-
+</div>
 <form method="post" asp-controller="Post" asp-action="Index" id="Content">
-    <div class="row">
-        <div class="col">
-            <div>
-                <label for="Topic">Topic</label>
-                <input type="text" id="Topic" name = "Topic" class="border" />
-            </div>
+    <div class="d-flex flex-row">
+        <div class="input-group">
+            <span class="input-group-text" id="topic-field">Topic</span>
+            <input type="text" class="form-control" aria-describedby="topic-field" name="Topic" required>
         </div>
-        <div class="col">
-            <div>
-                <label for="Category">Category</label>
-                <input type="text" id="Category" name = "Category" class="border" />
-            </div>
+        <div class="input-group">
+            <span class="input-group-text" id="categ-field">Category</span>
+            <select class="form-select" id="Category" name = "Category" aria-describedby="categ-field" required>
+                <option value="Films&Series">Films&Series</option>
+                <option value="Games">Games</option>
+                <option value="Music">Music</option>
+            </select>
+        </div>
+    </div>
+    <div class="d-flex flex-row">
+        <div class="input-group">
+        <span class="input-group-text" id="rating-field">Your grade:</span>
+        <input type="range" class="form-range" min="1" max="5" step="1" name="authorGrade" aria-describedby="rating-field" oninput="document.getElementById('Grade').innerText = parseInt(this.value);Grade=parseInt(this.value)">
+	    <span class="input-group-text"><output class="col" name="show_parM_val" id="Grade">1</output></span>
         </div>
     </div>
 
     <div>
-        <textarea class="border" style="height: 350px; width: 600px" id="Text" name = "Text"></textarea>
+        <textarea class="border" style="height: 350px; width: 600px;" id="Text" name = "Text"></textarea>
         <label for="Text">Your content</label>
     </div>
 
