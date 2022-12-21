@@ -32,7 +32,8 @@
         @if(Model.ContainsKey("Posts")){
         foreach(var post in Model["Posts"]){
             String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post[0]}_thumb";    
-                <a class="d-flex flex-row border nav-link text-dark" asp-area=""  asp-for="postId" asp-route-postId="@post[0]" asp-controller="Blog" asp-action="ViewPost">
+                <div class="d-flex flex-row border">
+                <a class="nav-link text-dark" asp-area=""  asp-for="postId" asp-route-postId="@post[0]" asp-controller="Blog" asp-action="ViewPost">
                 <div>
                     <img src="@link" id="@post[0]" style="offset: auto; border-radius: 35px;height: 150px; width: 300px;">
                 </div>
@@ -40,6 +41,8 @@
                     Category: @post[1] <h3>@post[2]</h3>
                 </div>
                 </a>
+                <a class="nav-link text-dark bg-danger" asp-for="postId" asp-route-postId="@post[0]" asp-controller="Blog" asp-action="DeletePost">Delete</a>
+                </div>
         }
         }
     </div>

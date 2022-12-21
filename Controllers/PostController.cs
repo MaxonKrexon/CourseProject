@@ -29,7 +29,14 @@ public class PostController : Controller
     
     public IActionResult Index()
     {   
-        return View();
+        if (_signInManager.IsSignedIn(User))
+        {
+            return View();
+        }
+        else
+        {
+            return Redirect("~/Identity/Account/Login");
+        }
     }
 
     [HttpPost]

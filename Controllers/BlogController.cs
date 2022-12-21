@@ -66,8 +66,6 @@ public class BlogController : Controller
 
     public void GetUserPosts(AppUser user)
     {
-        String containerName = "posts";
-        BlobContainerClient postsCli = new BlobContainerClient(connectionString, containerName);
         var userPosts = _db.Posts.Where(p => p.Author.Id == user.Id).ToList();
         if (userPosts.Count() > 0)
         {
@@ -99,7 +97,26 @@ public class BlogController : Controller
         return View(post);
     }
 
+    public IActionResult DeletePost(String postId){
+        var post = _db.Posts.Where(p => p.ID == postId).ToList()[0];
+        DeleteFromCloud(postId);
+        _db.Posts.Remove(post);
+        _db.SaveChanges();
+        return RedirectToAction("Index","Blog");
+    }
 
+    public async void DeleteFromCloud(String postId){
+        String containerName = "posts";
+        BlobContainerClient postsCli = new BlobContainerClient(connectionString, containerName);
+        var postFiles = postsCli.GetBlobs(prefix: postId);
+        if (postFiles.Count() > 0)
+        {
+            foreach (var file in postFiles)
+            {
+                await postsCli.DeleteBlobAsync(file.Name);
+            }
+        }
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
