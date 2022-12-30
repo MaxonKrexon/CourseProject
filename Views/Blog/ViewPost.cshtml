@@ -3,7 +3,7 @@
 @using Azure.Storage.Blobs.Models;
 @using Azure.Storage.Blobs.Specialized;
 @{
-    ViewData["Title"] = $"Post: {Model.ID}";
+    ViewData["Title"] = $"Post: {Model.Topic}";
 
     String containerName = "posts";
     String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
@@ -29,3 +29,36 @@
 }
 <br />
 @text.Value.Content
+@* получить количество картинок *@
+@* в цикле составить карусель с картинками *@
+<div id="PostPicturesCarousel" style="width: 500px;height: 282;" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+    @{
+        var files = cloud.GetBlobs(prefix: Model.ID);
+        var partLink = $"https://freshsightcloud.blob.core.windows.net/posts/";
+        foreach(var file in files){
+            if(file.Name.Contains("text") || file.Name.Contains("thumb")){
+                continue;
+            }
+            else{
+                var link = partLink + file.Name;
+                var isActive = String.Empty;
+                if(file.Name.Contains("_0")){
+                    isActive = "active";
+                }
+                <div class="carousel-item @isActive">
+                    <img src="@link" class="d-block w-100">
+                </div>
+            }  
+        }
+    }
+    </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#PostPicturesCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#PostPicturesCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+</div>
