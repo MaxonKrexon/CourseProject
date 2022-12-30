@@ -90,22 +90,33 @@ public class BlogController : Controller
         }
     }
 
-    
-    public IActionResult ViewPost(String postId)
+
+    public IActionResult ViewPost(String? postId)
     {
+        if(postId == null){
+            postId = TempData["AfterRedirectVar"] as string;
+        }
         var post = _db.Posts.Where(p => p.ID == postId).ToList()[0];
+        _CommentsPartial(postId);
         return View(post);
     }
 
-    public IActionResult DeletePost(String postId){
+    public IActionResult _CommentsPartial(String postId){
+        var comments = _db.Comments.Where(c => c.Post.ID == postId).ToList();
+        return View(comments);
+    }
+
+    public IActionResult DeletePost(String postId)
+    {
         var post = _db.Posts.Where(p => p.ID == postId).ToList()[0];
         DeleteFromCloud(postId);
         _db.Posts.Remove(post);
         _db.SaveChanges();
-        return RedirectToAction("Index","Blog");
+        return RedirectToAction("Index", "Blog");
     }
 
-    public async void DeleteFromCloud(String postId){
+    public async void DeleteFromCloud(String postId)
+    {
         String containerName = "posts";
         BlobContainerClient postsCli = new BlobContainerClient(connectionString, containerName);
         var postFiles = postsCli.GetBlobs(prefix: postId);
@@ -117,6 +128,7 @@ public class BlogController : Controller
             }
         }
     }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

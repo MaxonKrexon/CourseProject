@@ -26,9 +26,9 @@ public class PostController : Controller
         _db = db;
     }
     static String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
-    
+
     public IActionResult Index()
-    {   
+    {
         if (_signInManager.IsSignedIn(User))
         {
             return View();
@@ -40,9 +40,9 @@ public class PostController : Controller
     }
 
     [HttpPost]
-    public async Task<RedirectToPageResult> Index(String Topic, String Category, String Text, double authorGrade ,Post post)
-    {   
-        AppUser user = await _userManager.GetUserAsync(User); 
+    public async Task<RedirectToActionResult> Index(String Topic, String Category, String Text, double authorGrade, Post post)
+    {
+        AppUser user = await _userManager.GetUserAsync(User);
 
         Guid postId = Guid.NewGuid();
         post.ID = postId.ToString();
@@ -54,7 +54,7 @@ public class PostController : Controller
         System.IO.File.CreateText(textfile);
         System.IO.File.WriteAllText(textfile, Text);
         UploadToCloud(post, user);
-        return RedirectToPage("/Blog/Index");
+        return RedirectToAction("Index", "Blog");
     }
 
     public async void UploadToCloud(Post post, AppUser user)
@@ -63,7 +63,7 @@ public class PostController : Controller
 
         String containerName = "posts";
         BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
-        
+
         String dir = $"wwwroot/uploaded/";
         var files = Directory.GetFiles(dir);
 
@@ -85,7 +85,7 @@ public class PostController : Controller
 
     [HttpPost]
     public void UploadToServer()
-    {   
+    {
         var files = Request.Form.Files;
         String dir = $"wwwroot/uploaded/";
         int index = 0;
@@ -107,5 +107,22 @@ public class PostController : Controller
             }
             index++;
         }
+    }
+
+    [HttpPost]
+    public async Task<RedirectToActionResult> AddComment(String Comment, String postId)
+    {
+        AppUser user = await _userManager.GetUserAsync(User);
+        var post = _db.Posts.Where(p => p.ID == postId).ToList()[0];
+        var cmt = new Comment();
+        cmt.Author = user;
+        cmt.Post = post;
+        cmt.Content = Comment;
+        cmt.ID = Guid.NewGuid().ToString();
+        post.Comments.Add(cmt);
+        _db.SaveChanges();
+        
+        TempData["AfterRedirectVar"] = postId;
+        return RedirectToAction("ViewPost", "Blog", new { postId = post.ID });
     }
 }

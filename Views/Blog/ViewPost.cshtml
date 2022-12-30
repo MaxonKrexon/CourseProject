@@ -12,53 +12,95 @@
     var thumbBlock = new BlockBlobClient(connectionString, containerName, $"{Model.ID}_thumb");
     var text = textBlock.DownloadContent();
 }
+<div class="d-flex flex-column">
+    <div class="d-flex flex-row">
+        <div class="p-2">
+            <h2>@Model.Topic</h2>
+        </div>
+    </div>
+    <div class="d-flex flex-row">
+        <div class="p-2">
+            <h4><i>Category: @Model.Category</i></h4>
+        </div>
+        <div class="p-2">
+            <h5><i>Author grade: @Model.AuthorGrade</i></h5>
+        </div>
+    </div>
 
-<div id="Post header" class="row">
-    <div class="col">
-        <h2>@Model.Topic</h2>
-    </div>
-    <div class="col">
-        <i>Author grade: @Model.AuthorGrade</i>
-    </div>
-</div>
-</h4>@Model.Category</h4>
-<br />
-@if(await thumbBlock.ExistsAsync()){
-    String link = $"https://freshsightcloud.blob.core.windows.net/posts/{Model.ID}_thumb";
-    <img src="@link" style="width: 445px; height: 250px; border-radius: 30px;">
-}
-<br />
-@text.Value.Content
-@* получить количество картинок *@
-@* в цикле составить карусель с картинками *@
-<div id="PostPicturesCarousel" style="width: 500px;height: 282;" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-    @{
-        var files = cloud.GetBlobs(prefix: Model.ID);
-        var partLink = $"https://freshsightcloud.blob.core.windows.net/posts/";
-        foreach(var file in files){
-            if(file.Name.Contains("text") || file.Name.Contains("thumb")){
-                continue;
-            }
-            else{
-                var link = partLink + file.Name;
-                var isActive = String.Empty;
-                if(file.Name.Contains("_0")){
-                    isActive = "active";
-                }
-                <div class="carousel-item @isActive">
-                    <img src="@link" class="d-block w-100">
-                </div>
-            }  
+    <div class="d-flex flex-row">
+        @if(await thumbBlock.ExistsAsync()){
+        String link = $"https://freshsightcloud.blob.core.windows.net/posts/{Model.ID}_thumb";
+        <div class="p-2">
+            <img src="@link" style="border-radius: 30px;" id="thumbnail">
+        </div>
         }
-    }
+
+        <div class="p-2 border" style="border-radius: 30px;" id="textArea">
+            <p class="text-md-start">
+                @text.Value.Content
+            </p>
+        </div>
     </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#PostPicturesCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#PostPicturesCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+    <div class="d-flex flex-row">
+        <div id="PostPicturesCarousel" class="p-2 carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+            @{
+                var files = cloud.GetBlobs(prefix: Model.ID);
+                var partLink = $"https://freshsightcloud.blob.core.windows.net/posts/";
+                foreach(var file in files){
+                    if(file.Name.Contains("text") || file.Name.Contains("thumb")){
+                        continue;
+                    }
+                    else{
+                        var link = partLink + file.Name;
+                        var isActive = String.Empty;
+                        if(file.Name.Contains("_0")){
+                            isActive = "active";
+                        }
+                        <div class="carousel-item @isActive">
+                            <img src="@link" id="picture_@file.Name">
+                            <script>
+                                document.getElementById("picture_@file.Name").style.width = (0.6 * screen.availWidth) + 'px';
+                                document.getElementById("picture_@file.Name").style.height = ((0.6 * screen.availWidth)*0.5625) + 'px';
+                            </script>
+                        </div>
+                    }  
+                }
+            }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#PostPicturesCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#PostPicturesCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <div class="d-flex flex-row">
+        <div class="p-2" id="CreateCommentSection">
+            <form method="post" asp-controller="Post" asp-action="AddComment" enctype="text/html; charset=utf-8" asp-for="postId" asp-route-postId="@Model.ID">
+                <label for="commentTextArea" class="form-label"><i>Leave your comment below:</i></label>
+                <textarea class="form-control" id="commentTextArea" rows="3" name = "Comment"></textarea>
+                <button type="submit" class="btn btn-info">Leave a comment</button>
+            </form>
+        </div>
+    </div>
+    <partial name="_CommentsPartial" />
 </div>
+@section Scripts{
+    <script>
+        var width = 0.6 * screen.availWidth;
+
+        document.getElementById("thumbnail").style.width = (0.25 * width) + 'px';
+        document.getElementById("thumbnail").style.height = ((0.25 * width) * 0.5625) + 'px';
+
+        document.getElementById("textArea").style.width = (0.75 * width) + 'px';
+
+        document.getElementById("PostPicturesCarousel").style.width = width + 'px';
+        document.getElementById("PostPicturesCarousel").style.height = (0.5625 * width) + 'px';
+
+        document.getElementById("CreateCommentSection").style.width = width + 'px';
+    </script>
+}

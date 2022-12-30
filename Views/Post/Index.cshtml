@@ -13,7 +13,7 @@
         </div>
         <div class="input-group">
             <span class="input-group-text" id="categ-field">Category</span>
-            <select class="form-select" id="Category" name = "Category" aria-describedby="categ-field" required>
+            <select class="form-select" id="Category" name = "Category" aria-describedby="categ-field">
                 <option value="Films&Series">Films&Series</option>
                 <option value="Games">Games</option>
                 <option value="Music">Music</option>
@@ -29,11 +29,13 @@
     </div>
 
     <div>
-        <textarea class="border" style="height: 350px; width: 600px;" id="Text" name = "Text"></textarea>
+        <textarea class="border" id="Text" name = "Text"></textarea>
         <label for="Text">Your content</label>
+        <script>
+            document.getElementById("Text").style.width = 0.6 * screen.width;
+            document.getElementById("Text").style.height = (0.6 * screen.width) * 0.5625;
+        </script>
     </div>
-
-    
 
     <div class="row mb-4">
         <div class="d-inline-block w-25">
@@ -51,15 +53,13 @@
         <div class="d-inline-block w-75">
             <form method="post" enctype="multipart/form-data">
                 <div id="fileBasket" class="filebasket mb-4 text-center text-bg-light border" style="height: 130px;">
-                    Drag-n-Drop your pictures here!
+                    Drag-n-Drop your pictures here <b>all at once!</b>
                 </div>
             </form>
         </div>
     </div>
 
-    <button type="submit" form="Content" class="btn btn-primary btn-block mb-2">
-    Submit
-    </button>
+    <button type="submit" form="Content" class="btn btn-primary btn-block mb-2">Submit</button>
 </form>
 
 @section Scripts{
