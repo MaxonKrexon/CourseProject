@@ -21,10 +21,12 @@
         </div>
     </div>
     <div class="d-flex flex-row">
-        <div class="input-group">
-        <span class="input-group-text" id="rating-field">Your grade:</span>
-        <input type="range" class="form-range" min="1" max="5" step="1" name="authorGrade" aria-describedby="rating-field" oninput="document.getElementById('Grade').innerText = parseInt(this.value);Grade=parseInt(this.value)">
-	    <span class="input-group-text"><output class="col" name="show_parM_val" id="Grade">1</output></span>
+        <div class="p-2"> 
+            <div class="input-group">
+                <span class="input-group-text" id="rating-field">Your grade:</span>
+                <input type="range" class="form-range" min="1" max="5" step="1" name="authorGrade" aria-describedby="rating-field" oninput="document.getElementById('Grade').innerText = parseInt(this.value);Grade=parseInt(this.value)">
+	            <span class="input-group-text"><output class="col" name="show_parM_val" id="Grade">1</output></span>
+            </div>
         </div>
     </div>
 
