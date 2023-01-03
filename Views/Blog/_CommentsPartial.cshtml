@@ -1,7 +1,7 @@
 <div class="d-flex flex-column">
     @foreach(var comment in Model.Comments){
     <div class="p-2">
-        <label for="userComment" class="form-label">@comment.Author.UserName said:</label>
+        <label for="userComment" class="form-label">@comment.Author.UserName said at @comment.CreationTime:</label>
         <input class="form-control" type="text" value="@comment.Content" id="userComment" disabled readonly>
     </div>
     }

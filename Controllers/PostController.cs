@@ -78,7 +78,7 @@ public class PostController : Controller
             }
 
         }
-
+        post.CreationTime = DateTime.Now.ToString();
         user.Posts.Add(post);
         _db.SaveChanges();
     }
@@ -117,6 +117,7 @@ public class PostController : Controller
         var cmt = new Comment();
         cmt.Author = user;
         cmt.Post = post;
+        cmt.CreationTime = DateTime.Now.ToString();
         cmt.Content = Comment;
         cmt.ID = Guid.NewGuid().ToString();
         post.Comments.Add(cmt);

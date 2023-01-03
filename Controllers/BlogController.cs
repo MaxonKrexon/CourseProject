@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Azure.Storage.Blobs;
 using FreshSight.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace FreshSight.Controllers;
 
@@ -96,13 +97,13 @@ public class BlogController : Controller
         if(postId == null){
             postId = TempData["AfterRedirectVar"] as string;
         }
-        var post = _db.Posts.Where(p => p.ID == postId).Include(p => p.Author).ToList()[0];
+        var post = _db.Posts.Where(p => p.ID == postId).Include(p => p.Author).OrderByDescending(p => p.CreationTime).ToList()[0];
         _CommentsPartial(postId);
         return View(post);
     }
 
     public IActionResult _CommentsPartial(String postId){
-        var comments = _db.Comments.Where(c => c.Post.ID == postId).Include(c => c.Author).ToList();
+        var comments = _db.Comments.Where(c => c.Post.ID == postId).Include(c => c.Author).OrderByDescending(c => c.CreationTime).ToList();
         return View(comments);
     }
 
@@ -110,6 +111,12 @@ public class BlogController : Controller
     {
         var post = _db.Posts.Where(p => p.ID == postId).ToList()[0];
         DeleteFromCloud(postId);
+        var comments = _db.Comments.Where(c => c.Post.ID == postId).ToList();
+        
+        foreach(var comment in comments){
+            _db.Comments.Remove(comment);
+        }
+
         _db.Posts.Remove(post);
         _db.SaveChanges();
         return RedirectToAction("Index", "Blog");

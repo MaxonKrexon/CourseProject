@@ -12,5 +12,22 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <p><h2>Content<h2></p>
+        <div class="d-flex flex-column">
+            @foreach(var post in Model){
+                String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post.ID}_thumb"; 
+                <div class = "p-2">
+                    <div class="d-flex flex-row border">
+                        <a class="nav-link text-dark" asp-area=""  asp-for="postId" asp-route-postId="@post.ID" asp-controller="Blog" asp-action="ViewPost">
+                            <div class="p-2">
+                                <img src="@link" id="@post.ID" style="offset: auto; border-radius: 35px;height: 150px; width: 300px;">
+                            </div>
+                            <div style = "offset: auto;" class = "p-2">
+                                Category: @post.Category <h3>@post.Topic</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
