@@ -1,8 +1,17 @@
-<div class="d-flex flex-column">
+<div class="d-flex flex-column border" style="border-radius: 15px;" id="CommentSection">
     @foreach(var comment in Model.Comments){
     <div class="p-2">
         <label for="userComment" class="form-label">@comment.Author.UserName said at @comment.CreationTime:</label>
-        <input class="form-control" type="text" value="@comment.Content" id="userComment" disabled readonly>
+        <input class="form-control" type="text" value="@comment.Content" id="cmt_@comment.ID" disabled readonly style="border-radius: 15px;">
+        <script>
+            var width = 0.6 * screen.availWidth;
+            document.getElementById("cmt_@comment.ID").style.width = width + 'px';
+        </script>
     </div>
     }
 </div>
+
+<script>
+    var width = 0.61 * screen.availWidth;
+    document.getElementById("CommentSection").style.width = width + 'px';
+</script>

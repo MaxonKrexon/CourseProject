@@ -136,6 +136,11 @@ public class BlogController : Controller
         }
     }
 
+    public async Task<IActionResult> Blogger(String userId){
+        var author = await _userManager.FindByIdAsync(userId);
+        return View(author);
+    }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

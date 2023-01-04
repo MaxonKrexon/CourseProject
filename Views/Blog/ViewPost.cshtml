@@ -18,15 +18,22 @@
             <h2>@Model.Topic</h2>
         </div>
     </div>
-    <div class="d-flex flex-row">
+    <div class="d-flex flex-row border-bottom">
         <div class="p-2">
-            <h4><i>Category: @Model.Category
+            <h4><i>
+            Category: @Model.Category
         </div>
         <div class="p-2">
             Author grade: @Model.AuthorGrade
         </div>
         <div class="p-2">
-            Created at: @Model.CreationTime</h4></i>
+            Created at: @Model.CreationTime
+        </div>
+        <div class="p-2">
+            <a class="nav-link text-dark" asp-area="" asp-for="userId" asp-route-postId="@Model.Author.Id" asp-controller="Blog" asp-action="Blogger">
+                by @Model.Author.UserName
+            </a>
+            </h4></i>
         </div>
     </div>
 
@@ -81,17 +88,25 @@
             </button>
         </div>
     </div>
+
     <div class="d-flex flex-row">
         <div class="p-2" id="CreateCommentSection">
             <form method="post" asp-controller="Post" asp-action="AddComment" enctype="text/html; charset=utf-8" asp-for="postId" asp-route-postId="@Model.ID">
                 <label for="commentTextArea" class="form-label"><i>Leave your comment below:</i></label>
                 <textarea class="form-control" id="commentTextArea" rows="3" name = "Comment"></textarea>
-                <button type="submit" class="btn btn-info">Leave a comment</button>
             </form>
         </div>
     </div>
+
+    <div class="d-flex flex-row-reverse" id="commentButton">
+        <div class="p-2">
+            <button type="submit" class="btn btn-info">Leave a comment</button>
+        </div>
+    </div>
+
     <partial name="_CommentsPartial" />
 </div>
+
 @section Scripts{
     <script>
         var width = 0.6 * screen.availWidth;
@@ -105,5 +120,6 @@
         document.getElementById("PostPicturesCarousel").style.height = (0.5625 * width) + 'px';
 
         document.getElementById("CreateCommentSection").style.width = width + 'px';
+        document.getElementById("commentButton").style.width = width + 'px';
     </script>
 }
