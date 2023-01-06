@@ -24,19 +24,15 @@
         <div class="p-2"> 
             <div class="input-group">
                 <span class="input-group-text" id="rating-field">Your grade:</span>
-                <input type="range" class="form-range" min="1" max="5" step="1" name="authorGrade" aria-describedby="rating-field" oninput="document.getElementById('Grade').innerText = parseInt(this.value);Grade=parseInt(this.value)">
+                <input type="range" class="form-range" min="1" max="10" step="1" name="authorGrade" aria-describedby="rating-field" oninput="document.getElementById('Grade').innerText = parseInt(this.value);Grade=parseInt(this.value)">
 	            <span class="input-group-text"><output class="col" name="show_parM_val" id="Grade">1</output></span>
             </div>
         </div>
     </div>
 
     <div>
-        <textarea class="border" id="Text" name = "Text"></textarea>
         <label for="Text">Your content</label>
-        <script>
-            document.getElementById("Text").style.width = 0.6 * screen.width;
-            document.getElementById("Text").style.height = (0.6 * screen.width) * 0.5625;
-        </script>
+        <textarea class="border" id="textArea" name = "Text"></textarea>
     </div>
 
     <div class="row mb-4">
@@ -67,6 +63,19 @@
 @section Scripts{
 <partial name="_ValidationScriptsPartial" />
 <script>
+
+var coeff = 0;
+if(screen.height/screen.width > 0.5625){
+    coeff = 0.9;
+}
+else{
+    coeff = 0.6;
+}
+var width = coeff * screen.availWidth;
+document.getElementById("textArea").style.width = width + 'px';
+document.getElementById("textArea").style.height = (width * 0.5625) + 'px';
+
+
 $(document).ready(function () {
     $("#AddThumbnail").click(function(){
         $("#ThumbnailDnD").css("visibility", "visible");

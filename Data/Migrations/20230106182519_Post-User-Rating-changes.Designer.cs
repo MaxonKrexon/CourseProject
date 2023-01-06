@@ -4,6 +4,7 @@ using FreshSight.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreshSight.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230106182519_Post-User-Rating-changes")]
+    partial class PostUserRatingchanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,29 +143,6 @@ namespace FreshSight.Data.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("FreshSight.Models.UserGrade", b =>
-                {
-                    b.Property<string>("ID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AuthorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double?>("Grade")
-                        .HasColumnType("float");
-
-                    b.Property<string>("PostID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("PostID");
-
-                    b.ToTable("UserGrades");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -327,21 +306,6 @@ namespace FreshSight.Data.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("FreshSight.Models.UserGrade", b =>
-                {
-                    b.HasOne("FreshSight.Models.AppUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
-                    b.HasOne("FreshSight.Models.Post", "Post")
-                        .WithMany("UserRating")
-                        .HasForeignKey("PostID");
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -401,8 +365,6 @@ namespace FreshSight.Data.Migrations
             modelBuilder.Entity("FreshSight.Models.Post", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("UserRating");
                 });
 #pragma warning restore 612, 618
         }

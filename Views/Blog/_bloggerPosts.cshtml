@@ -1,0 +1,45 @@
+@{
+    String isAuthor = TempData["isAuthor"] as string;
+}
+
+<div class="d-flex flex-column">
+@foreach(var post in Model.Posts){
+    String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post.ID}_thumb";
+    <div class="p-2">
+        <div class="d-flex flex-row">
+            <div class="p-2">
+                <a class="nav-link text-dark" asp-area=""  asp-for="postId" asp-route-postId="@post.ID" asp-controller="Blog" asp-action="ViewPost">
+                    <div class="d-flex flex-row border" id="postRow" style="border-radius: 15px">
+                        <div class="p-2">
+                            <img src="@link" id="postPic" style="border-radius: 30px">
+                            <script>
+                                var width = screen.availWidth;
+                                document.getElementById("postPic").style.width = (0.2 * width) + 'px';
+                                document.getElementById("postPic").style.height = ((0.2 * width)*0.5625) + 'px';
+                            </script>
+                        </div>
+                        <div class="p-2">
+                            <div class="d-flex flex-column">
+                                <div class = "p-2">
+                                    <i>Category: @post.Category</i>
+                                </div>
+                                <div class = "p-2">
+                                    <h3>@post.Topic</h3>
+                                </div>
+                                <div class = "p-2">
+                                    <h5>Users rating: </h5>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+                </a>
+            </div>
+            @if(isAuthor=="true"){
+                <div class="p-2">
+                    <a class="nav-link text-dark bg-danger" asp-for="postId" asp-route-postId="@post.ID" asp-controller="Blog" asp-action="DeletePost">Delete</a>
+                </div>
+            }
+        </div>
+    </div>
+}
+</div>

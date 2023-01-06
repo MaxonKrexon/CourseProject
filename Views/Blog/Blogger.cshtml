@@ -1,0 +1,28 @@
+@using FreshSight.Controllers
+
+@{
+    ViewData["Title"] = Model.UserName;
+    String UserPic = TempData["targetPic"] as string;
+    String Age = TempData["targetAge"] as string;
+}
+
+<div class="d-flex flex-column" id="body">
+    <div class="p-2">
+        <div class="d-flex flex-row">
+            <div class="p-2">
+                <img src="@UserPic" style="border-radius: 75px; height: 150px; width: 150px;">
+            </div>
+            <div class="p-2">
+                <h3>@Model.UserName</h3>
+            </div>
+            @if(Model.DateOfBirth != null){
+                <div class="p-2">
+                    <h5>Age: @Age</h5>
+                </div>
+            }
+    <partial name=_bloggerPosts>
+</div>
+
+<script>
+    document.getElementById("body").style.height = (0.6 * screen.availWidth) + 'px';
+</script>

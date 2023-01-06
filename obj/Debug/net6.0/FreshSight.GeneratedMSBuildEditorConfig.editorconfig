@@ -187,8 +187,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmxvZy9WaWV3UG9zdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/home/maxon/Documents/FreshSight/Views/Blog/_bloggerPosts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmxvZy9fYmxvZ2dlclBvc3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/maxon/Documents/FreshSight/Views/Blog/_CommentsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmxvZy9fQ29tbWVudHNQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/maxon/Documents/FreshSight/Views/Blog/_gradesPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmxvZy9fZ3JhZGVzUGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/maxon/Documents/FreshSight/Views/Home/Index.cshtml]

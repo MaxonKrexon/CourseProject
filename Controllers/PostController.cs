@@ -110,20 +110,45 @@ public class PostController : Controller
     }
 
     [HttpPost]
-    public async Task<RedirectToActionResult> AddComment(String Comment, String postId)
+    public async Task<IActionResult> AddComment(String Comment, String postId)
     {
-        AppUser user = await _userManager.GetUserAsync(User);
-        var post = _db.Posts.Where(p => p.ID == postId).ToList()[0];
-        var cmt = new Comment();
-        cmt.Author = user;
-        cmt.Post = post;
-        cmt.CreationTime = DateTime.Now.ToString();
-        cmt.Content = Comment;
-        cmt.ID = Guid.NewGuid().ToString();
-        post.Comments.Add(cmt);
-        _db.SaveChanges();
-        
-        TempData["AfterRedirectVar"] = postId;
-        return RedirectToAction("ViewPost", "Blog", new { postId = post.ID });
+        if(_signInManager.IsSignedIn(User)){
+            AppUser user = await _userManager.GetUserAsync(User);
+            var post = _db.Posts.Where(p => p.ID == postId).ToList()[0];
+            var cmt = new Comment();
+            cmt.Author = user;
+            cmt.Post = post;
+            cmt.CreationTime = DateTime.Now.ToString();
+            cmt.Content = Comment;
+            cmt.ID = Guid.NewGuid().ToString();
+            post.Comments.Add(cmt);
+            _db.SaveChanges();
+            
+            TempData["AfterRedirectVar"] = postId;
+            return RedirectToAction("ViewPost", "Blog", new { postId = post.ID });
+        }
+        else {
+            return Redirect("~/Identity/Account/Login");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddGrade(String btnradio, String postId){
+        if(_signInManager.IsSignedIn(User)){
+            AppUser user = await _userManager.GetUserAsync(User);
+            Post post = _db.Posts.Where(p => p.ID == postId).First();
+            UserGrade ug = new UserGrade();
+            ug.ID = Guid.NewGuid().ToString();
+            ug.Author = user;
+            ug.Post = post;
+            ug.Grade = Convert.ToDouble(btnradio);
+            post.UserRating.Add(ug);
+            _db.SaveChanges();
+            TempData["AfterRedirectVar"] = postId;
+            return RedirectToAction("ViewPost", "Blog", new { postId = post.ID });
+        }
+        else {
+            return Redirect("~/Identity/Account/Login");
+        }
     }
 }

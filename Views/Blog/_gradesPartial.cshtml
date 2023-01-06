@@ -1,0 +1,49 @@
+@{
+    String currentUserGrade = TempData["CurrentUserGrade"] as string;
+}
+<div class="d-flex flex-row" id="gradeSection">
+    @if(Model.UserRating.Count > 0){
+        double userRating = 0;
+        foreach(var grade in Model.UserRating){
+            userRating+= grade.Grade;
+        }
+        userRating/=Model.UserRating.Count;
+        <div class="p-2">
+            <p>User rating: @userRating</p>
+        </div>
+    }
+    @if(currentUserGrade !=null){
+        <div class="p-2">
+            <p>Your grade is: @currentUserGrade</p>
+        </div>
+    }
+    else
+    {
+    <div class="p-2">
+        <p>How's you like that? </p>
+    </div>
+        <div class="p-2">
+            <form method="post" id="gradesForm" asp-controller="Post" asp-action="AddGrade" asp-for="postId" asp-route-postId="@Model.ID">
+                <div class="btn-group" role="group" aria-label="How's you like that?">
+                    <input type="radio" class="btn-check" value="1" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                    <label class="btn btn-outline-danger" for="btnradio1">1</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" value="2" id="btnradio2" autocomplete="off">
+                    <label class="btn btn-outline-danger" for="btnradio2">2</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" value="3" id="btnradio3" autocomplete="off">
+                    <label class="btn btn-outline-danger" for="btnradio3">3</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" value="4" id="btnradio4" autocomplete="off">
+                    <label class="btn btn-outline-danger" for="btnradio4">4</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" value="5" id="btnradio5" autocomplete="off">
+                    <label class="btn btn-outline-danger" for="btnradio5">5</label>
+                </div>
+            </form>
+        </div>
+    <div class="p-2">
+        <button type="submit" class="btn btn-info" form="gradesForm">Submit</button>
+    </div>
+}
+</div>

@@ -6,28 +6,47 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
-<div class="row">
-    <div class="col-md-4">
-        <p><h2>Filter</h2></p>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <p><h2>Content<h2></p>
-        <div class="d-flex flex-column">
-            @foreach(var post in Model){
-                String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post.ID}_thumb"; 
-                <div class = "p-2">
-                    <div class="d-flex flex-row border">
-                        <a class="nav-link text-dark" asp-area=""  asp-for="postId" asp-route-postId="@post.ID" asp-controller="Blog" asp-action="ViewPost">
-                            <div class="p-2">
-                                <img src="@link" id="@post.ID" style="offset: auto; border-radius: 35px;height: 150px; width: 300px;">
-                            </div>
-                            <div style = "offset: auto;" class = "p-2">
-                                Category: @post.Category <h3>@post.Topic</h3>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            }
+<div class="d-flex flex-column">
+    <div class="d-flex flex-row">
+        <div class="p-2" id="filterSection">
+            <p><h2>Filter</h2></p>
         </div>
-    </div>
+        <div class="p-2" id="contentSection">
+            <p><h2>Content</h2></p>
+            <div class="d-flex flex-column">
+                @foreach(var post in Model){
+                    String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post.ID}_thumb"; 
+                    <div class = "p-2">
+                            <a class="nav-link text-dark" asp-area=""  asp-for="postId" asp-route-postId="@post.ID" asp-controller="Blog" asp-action="ViewPost">
+                                <div class="d-flex flex-row border" id="postRow" style="border-radius: 15px">
+                                    <div class="p-2">
+                                        <img src="@link" id="postPic" style="border-radius: 30px">
+                                    </div>
+                                    <div class="p-2">
+                                        <div class="d-flex flex-column">
+                                            <div class = "p-2">
+                                                <i>Category: @post.Category</i>
+                                            </div>
+                                            <div class = "p-2">
+                                                <h3>@post.Topic</h3>
+                                            </div>
+                                            <div class = "p-2">
+                                                <h5>Users rating: </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                    </div>
+                }
+            </div>
+        </div>
 </div>
+
+<script>
+    var width = screen.availWidth;
+    document.getElementById("contentSection").style.width = (0.75 * width) + 'px';
+    document.getElementById("filterSection").style.width = (0.25 * width) + 'px';
+    document.getElementById("postPic").style.width = (0.2 * width) + 'px';
+    document.getElementById("postPic").style.height = ((0.2 * width)*0.5625) + 'px';
+</script>
