@@ -3,17 +3,32 @@
     <div class="p-2">
         <label for="userComment" class="form-label">@comment.Author.UserName said at @comment.CreationTime:</label>
         <input class="form-control" type="text" value="@comment.Content" id="cmt_@comment.ID" disabled readonly style="border-radius: 15px;">
-        <script>
-            var coeff = 0;
-            if(screen.height/screen.width > 0.5625){
-                coeff = 0.9;
-            }
-            else{
-                coeff = 0.6;
-            }
-            var width = coeff * screen.availWidth;
-            document.getElementById("cmt_@comment.ID").style.width = width + 'px';
-        </script>
     </div>
     }
 </div>
+
+<script>
+    var coeff = 0;
+    if(screen.height/screen.width > 0.5625){
+        coeff = 0.9;
+    }
+    else{
+        coeff = 0.6;
+    }
+    var width = coeff * screen.availWidth;
+    document.getElementById("CommentSection").style.width = width + 'px';
+
+    setInterval(() => {
+        $.ajax({
+            type: "POST",
+            url: "/Blog/UpdateComments?postId=@Model.ID",
+            contentType: false,
+            processData: false,
+            data: false,
+            error: function () {
+                alert("An error occured! Autoupdate of comments");
+            },
+        });
+        $("#CommentSection").load(" #CommentSection > *" );
+    }, 5000);
+</script>

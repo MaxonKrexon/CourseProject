@@ -105,6 +105,11 @@ public class BlogController : Controller
         return View(comments);
     }
 
+    [HttpPost]
+    public void UpdateComments(String postId){
+        _CommentsPartial(postId);
+    }
+
     public IActionResult DeletePost(String postId)
     {
         var post = _db.Posts.Where(p => p.ID == postId).First();
