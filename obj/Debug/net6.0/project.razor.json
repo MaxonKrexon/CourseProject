@@ -16443,6 +16443,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/maxon/Documents/FreshSight/Views/Home/Find.cshtml",
+      "TargetPath": "Views\\Home\\Find.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/maxon/Documents/FreshSight/Areas/Identity/Pages/Account/Manage/ResetAuthenticator.cshtml",
       "TargetPath": "Areas\\Identity\\Pages\\Account\\Manage\\ResetAuthenticator.cshtml",
       "FileKind": "mvc"

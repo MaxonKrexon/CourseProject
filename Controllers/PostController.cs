@@ -31,6 +31,9 @@ public class PostController : Controller
     {
         if (_signInManager.IsSignedIn(User))
         {
+            String postId = Guid.NewGuid().ToString();
+            System.IO.Directory.CreateDirectory($"wwwroot/uploaded/{postId}");
+            TempData["NewPostId"] = postId;
             return View();
         }
         else
@@ -44,13 +47,12 @@ public class PostController : Controller
     {
         AppUser user = await _userManager.GetUserAsync(User);
 
-        Guid postId = Guid.NewGuid();
-        post.ID = postId.ToString();
+        var postId = TempData["NewPostId"] as String;
+        post.ID = postId;
         post.Topic = Topic;
         post.Category = Category;
         post.AuthorGrade = authorGrade;
-
-        String textfile = $"wwwroot/uploaded/_text";
+        String textfile = $"wwwroot/uploaded/{postId}/_text";
         System.IO.File.CreateText(textfile);
         System.IO.File.WriteAllText(textfile, Text);
         UploadToCloud(post, user);
@@ -64,7 +66,7 @@ public class PostController : Controller
         String containerName = "posts";
         BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
 
-        String dir = $"wwwroot/uploaded/";
+        String dir = $"wwwroot/uploaded/{post.ID}/";
         var files = Directory.GetFiles(dir);
 
         foreach (var file in files)
@@ -78,6 +80,7 @@ public class PostController : Controller
             }
 
         }
+        System.IO.Directory.Delete(dir);
         post.CreationTime = DateTime.Now.ToString();
         user.Posts.Add(post);
         _db.SaveChanges();
@@ -87,7 +90,8 @@ public class PostController : Controller
     public void UploadToServer()
     {
         var files = Request.Form.Files;
-        String dir = $"wwwroot/uploaded/";
+        var postId = TempData["NewPostId"] as String;
+        String dir = $"wwwroot/uploaded/{postId}/";
         int index = 0;
         foreach (var file in files)
         {

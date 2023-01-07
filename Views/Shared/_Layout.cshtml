@@ -26,6 +26,14 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+
+                    <form method="post" asp-controller="Home" asp-action="Find">
+                        <div class="input-group input-group-sm w-100">
+                            <input type="text" class="form-control" name="question" placeholder="What's you searching for?" aria-label="What's you searching for?" aria-describedby="button-addon2">
+                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2" >Find</button>
+                        </div>
+                    </form>
+                    
                     <partial name="_LoginPartial" />
                 </div>
             </div>

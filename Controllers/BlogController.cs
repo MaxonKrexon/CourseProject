@@ -101,7 +101,7 @@ public class BlogController : Controller
     }
 
     public IActionResult _CommentsPartial(String postId){
-        var comments = _db.Comments.Where(c => c.Post.ID == postId).Include(c => c.Author).OrderByDescending(c => c.CreationTime).ToList();
+        var comments = _db.Comments.Where(c => c.Post.ID == postId).Include(c => c.Author).OrderBy(c => c.CreationTime).ToList();
         return View(comments);
     }
 
