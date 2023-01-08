@@ -1,9 +1,20 @@
 <div class="d-flex flex-column" id="CommentSection">
     @foreach(var comment in Model.Comments){
-    <div class="p-2">
-        <label for="userComment" class="form-label">@comment.Author.UserName said at @comment.CreationTime:</label>
-        <input class="form-control" type="text" value="@comment.Content" id="cmt_@comment.ID" disabled readonly style="border-radius: 15px;">
-    </div>
+        String commentatorGrade = String.Empty;
+        foreach(var grade in Model.UserRating){
+            if(grade.Author == comment.Author){
+                commentatorGrade = $"(graded this post as {grade.Grade.ToString()})";
+                break;
+            }
+        }
+        if(commentatorGrade == String.Empty){
+            commentatorGrade = "(didn't grade this post)";
+        }
+        <div class="p-2">
+            <label for="userComment" class="form-label">
+                <a asp-for="userId" asp-route-userId="@comment.Author.Id" asp-controller="Blog" asp-action="Blogger">@comment.Author.UserName</a> @commentatorGrade said at @comment.CreationTime:</label>
+            <input class="form-control" type="text" value="@comment.Content" id="cmt_@comment.ID" disabled readonly style="border-radius: 15px;">
+        </div>
     }
 </div>
 

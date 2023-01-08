@@ -1,3 +1,76 @@
+@using Azure.Storage.Blobs;
+@using Azure.Storage.Blobs.Models;
+@using Azure.Storage.Blobs.Specialized;
 @{
     ViewData["Title"] = "Search results";
+    String containerName = "posts";
+    String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
+    BlobContainerClient cloud = new BlobContainerClient(connectionString, containerName);
 }
+
+<div class="border-bottom">
+    <p>That's what we found:</p>
+</div>
+
+<div class="d-flex flex-column">
+@foreach(var post in Model){
+    String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post.ID}_thumb";
+    <div class="p-2">
+        <div class="d-flex flex-row">
+            <div class="p-2">
+                <a class="nav-link text-dark" asp-area=""  asp-for="postId" asp-route-postId="@post.ID" asp-controller="Blog" asp-action="ViewPost">
+                    <div class="d-flex flex-row border" id="postRow" style="border-radius: 15px">
+                        <div class="p-2">
+                            @{
+                                var postBlobs = cloud.GetBlobs(prefix: post.ID);
+                                foreach(var blob in postBlobs){
+                                    if(blob.Name.Contains("thumb")){
+                                        String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post.ID}_thumb";
+                                        <div class="p-2">
+                                            <img src="@link" style="border-radius: 30px;" id="postPic">
+                                        </div>
+                                        break;
+                                    }
+                                }
+                            }
+                            <script>
+                                var width = screen.availWidth;
+                                document.getElementById("postPic").style.width = (0.2 * width) + 'px';
+                                document.getElementById("postPic").style.height = ((0.2 * width)*0.5625) + 'px';
+                            </script>
+                        </div>
+                        <div class="p-2">
+                            <div class="d-flex flex-column">
+                                <div class = "p-2">
+                                    <i>Created @post.CreationTime</i>
+                                </div>
+                                <div class = "p-2">
+                                    <i>Category: @post.Category</i>
+                                </div>
+                                <div class = "p-2">
+                                    <h3>@post.Topic</h3>
+                                </div>
+                                @if(post.UserRating.Count > 0){
+                                    double userRating = 0;
+                                    foreach(var grade in post.UserRating){
+                                        userRating+= grade.Grade;
+                                    }
+                                    userRating/=post.UserRating.Count;
+                                    <div class="p-2">
+                                        <p>Users rating: @userRating</p>
+                                    </div>
+                                }
+                                else{
+                                    <div class = "p-2">
+                                        <h5>Users rating: Be first!</h5>
+                                    </div>
+                                }
+                            </div>
+                         </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+</div>

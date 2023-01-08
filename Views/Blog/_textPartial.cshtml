@@ -1,0 +1,5 @@
+@{
+    var content = System.IO.File.ReadAllText("sample.cshtml");
+    System.IO.File.Delete("sample.cshtml");
+    @Html.Raw(content)
+}

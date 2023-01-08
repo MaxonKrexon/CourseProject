@@ -7,9 +7,8 @@
     String containerName = "posts";
     String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
     BlobContainerClient cloud = new BlobContainerClient(connectionString, containerName);
-    var textBlock = new BlockBlobClient(connectionString, containerName, $"{Model.ID}_text");
-    var thumbBlock = new BlockBlobClient(connectionString, containerName, $"{Model.ID}_thumb");
-    var text = textBlock.DownloadContent();
+    
+    
 }
 <div class="d-flex flex-column">
     <div class="p-2">
@@ -28,26 +27,27 @@
             <div class="p-2">
                 Created at: @Model.CreationTime
             </div>
-            <div class="p-2">
-                <a class="nav-link text-dark" asp-area="" asp-for="userId" asp-route-userId="@Model.Author.Id" asp-controller="Blog" asp-action="Blogger">
-                    by @Model.Author.UserName
-                </a>
-            </div>
+            <a class="p-2" asp-area="" asp-for="userId" asp-route-userId="@Model.Author.Id" asp-controller="Blog" asp-action="Blogger">
+                by @Model.Author.UserName
+            </a>
         </div>
     </div>
     <div class="p-2">
         <div class="d-flex flex-row">
-            @if(await thumbBlock.ExistsAsync()){
-                String link = $"https://freshsightcloud.blob.core.windows.net/posts/{Model.ID}_thumb";
-                    <div class="p-2">
-                        <img src="@link" style="border-radius: 30px;" id="thumbnail">
-                    </div>
+            @{
+                var postBlobs = cloud.GetBlobs(prefix: Model.ID);
+                foreach(var blob in postBlobs){
+                    if(blob.Name.Contains("thumb")){
+                        String link = $"https://freshsightcloud.blob.core.windows.net/posts/{Model.ID}_thumb";
+                        <div class="p-2">
+                            <img src="@link" style="border-radius: 30px;" id="thumbnail">
+                        </div>
+                        break;
+                    }
+                }
             }
-
             <div class="p-2 border" style="border-radius: 30px;" id="textArea">
-                <p class="text-md-start">
-                    @text.Value.Content
-                </p>
+                <partial name="_textPartial"/>
             </div>
         </div>
     </div>
@@ -82,7 +82,7 @@
                                 document.getElementById("picture_@file.Name").style.height = ((width)*0.5625) + 'px';
                             </script>
                         </div>
-                    }  
+                    }
                 }
             }
             </div>
@@ -130,9 +130,10 @@
             coeff = 0.6;
         }
         var width = coeff * screen.availWidth;
-
-        document.getElementById("thumbnail").style.width = (0.25 * width) + 'px';
-        document.getElementById("thumbnail").style.height = ((0.25 * width) * 0.5625) + 'px';
+        if(document.getElementById("thumbnail") != null){
+            document.getElementById("thumbnail").style.width = (0.25 * width) + 'px';
+            document.getElementById("thumbnail").style.height = ((0.25 * width) * 0.5625) + 'px';
+        }
 
         document.getElementById("textArea").style.width = (0.75 * width) + 'px';
         document.getElementById("postInfo").style.width = width + 'px';

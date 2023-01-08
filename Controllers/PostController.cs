@@ -43,15 +43,15 @@ public class PostController : Controller
     }
 
     [HttpPost]
-    public async Task<RedirectToActionResult> Index(String Topic, String Category, String Text, double authorGrade, Post post)
+    public async Task<RedirectToActionResult> Index(String Topic, String Category, String Text, String authorGrade, Post post)
     {
         AppUser user = await _userManager.GetUserAsync(User);
 
-        var postId = TempData["NewPostId"] as String;
+        String postId = TempData["NewPostId"].ToString();
         post.ID = postId;
         post.Topic = Topic;
         post.Category = Category;
-        post.AuthorGrade = authorGrade;
+        post.AuthorGrade = Convert.ToDouble(authorGrade);
         String textfile = $"wwwroot/uploaded/{postId}/_text";
         System.IO.File.CreateText(textfile);
         System.IO.File.WriteAllText(textfile, Text);
@@ -73,7 +73,7 @@ public class PostController : Controller
         {
             using (MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(file)))
             {
-                String BlobName = post.ID + file.Split("/")[2];
+                String BlobName = post.ID + file.Split("/")[3];
                 containerClient.UploadBlob(blobName: BlobName, content: ms);
                 ms.Flush();
                 System.IO.File.Delete(file);
@@ -90,7 +90,7 @@ public class PostController : Controller
     public void UploadToServer()
     {
         var files = Request.Form.Files;
-        var postId = TempData["NewPostId"] as String;
+        String postId = TempData["NewPostId"] as String;
         String dir = $"wwwroot/uploaded/{postId}/";
         int index = 0;
         foreach (var file in files)

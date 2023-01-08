@@ -7,6 +7,7 @@ using Azure.Storage.Blobs;
 using FreshSight.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Azure.Storage.Blobs.Specialized;
 
 namespace FreshSight.Controllers;
 
@@ -75,13 +76,14 @@ public class BlogController : Controller
     }
 
 
-    public async Task<IActionResult> ViewPost(String? postId)
+    public IActionResult ViewPost(String? postId)
     {
         if(postId == null){
             postId = TempData["AfterRedirectVar"] as string;
         }
         var post = _db.Posts.Where(p => p.ID == postId).Include(p => p.Author).First();
 
+        _textPartial(postId);
         _CommentsPartial(postId);
         _gradesPartial(postId);
         
@@ -108,6 +110,20 @@ public class BlogController : Controller
     [HttpPost]
     public void UpdateComments(String postId){
         _CommentsPartial(postId);
+    }
+
+    public void _textPartial(String postId){
+        var containerName = "posts";
+        var textBlob = new BlockBlobClient(connectionString, containerName, $"{postId}_text");
+        var textBlock = textBlob.DownloadContent();
+        var text = textBlock.Value.Content.ToStream();
+        using (FileStream fs = System.IO.File.Create("sample.md"))
+        {
+            text.CopyTo(fs);
+            fs.Flush();
+        }
+        System.Diagnostics.Process.Start("pandoc", " sample.md -t html -o sample.cshtml");
+        System.IO.File.Delete("sample.md");
     }
 
     public IActionResult DeletePost(String postId)
@@ -158,7 +174,7 @@ public class BlogController : Controller
     }
 
     public IActionResult _bloggerPosts(AppUser author){
-        var posts = _db.Posts.Where(p => p.Author == author).ToList();
+        var posts = _db.Posts.Where(p => p.Author == author).Include(p => p.UserRating).ToList();
         return View(posts);
     }
 

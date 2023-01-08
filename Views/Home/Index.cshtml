@@ -1,38 +1,85 @@
-﻿@{
+﻿@using Azure.Storage.Blobs;
+@using Azure.Storage.Blobs.Models;
+@using Azure.Storage.Blobs.Specialized;
+@{
     ViewData["Title"] = "Home Page";
+    var selectedCategory = TempData["selectedCategory"] as String;
+
+    String containerName = "posts";
+    String connectionString = "DefaultEndpointsProtocol=https;AccountName=freshsightcloud;AccountKey=nnVOWYu0nVMx1pprfPeoktl2PdAsTdmW/iL8Zt/CfqrP3xugfFM72Kpi47/l46qrfhBCIMDMliQ++AStPFLjHw==;EndpointSuffix=core.windows.net";
+    BlobContainerClient cloud = new BlobContainerClient(connectionString, containerName);
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>Here you can find and create your own reviews about everything in Music, Games and Films/Series!</p>
 </div>
 <div class="d-flex flex-column">
     <div class="d-flex flex-row">
         <div class="p-2" id="filterSection">
-            <p><h2>Filter</h2></p>
+            <div class="d-flex flex-column border-right">
+                <div class="p-2">
+                    <p><h2>Filter</h2></p>
+                </div>
+                <div class="p-2">
+                    <form method="post" asp-controller="Home" asp-action="Index">
+                        <span class="input-group-text" id="categ-field">Category</span>
+                        <select class="form-select" id="categorySelector" name = "Category" aria-describedby="categ-field">
+                            <option value="All">All</option>
+                            <option value="Films/Series">Films/Series</option>
+                            <option value="Games">Games</option>
+                            <option value="Music">Music</option>
+                        </select>
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="p-2" id="contentSection">
+        <div class="p-2 border-left" id="contentSection">
             <p><h2>Content</h2></p>
             <div class="d-flex flex-column">
                 @foreach(var post in Model){
-                    String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post.ID}_thumb"; 
                     <div class = "p-2">
                             <a class="nav-link text-dark" asp-area=""  asp-for="postId" asp-route-postId="@post.ID" asp-controller="Blog" asp-action="ViewPost">
                                 <div class="d-flex flex-row border" id="postRow" style="border-radius: 15px">
-                                    <div class="p-2">
-                                        <img src="@link" id="postPic" style="border-radius: 30px">
-                                    </div>
+                                    @{
+                                        var postBlobs = cloud.GetBlobs(prefix: post.ID);
+                                        foreach(var blob in postBlobs){
+                                            if(blob.Name.Contains("thumb")){
+                                                String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post.ID}_thumb";
+                                                <div class="p-2">
+                                                    <img src="@link" style="border-radius: 30px;" id="postPic">
+                                                </div>
+                                                break;
+                                            }
+                                        }
+                                    }
                                     <div class="p-2">
                                         <div class="d-flex flex-column">
+                                            <div class = "p-2">
+                                                <i>Created @post.CreationTime</i>
+                                            </div>
                                             <div class = "p-2">
                                                 <i>Category: @post.Category</i>
                                             </div>
                                             <div class = "p-2">
                                                 <h3>@post.Topic</h3>
                                             </div>
-                                            <div class = "p-2">
-                                                <h5>Users rating: </h5>
-                                            </div>
+                                            @if(post.UserRating.Count > 0){
+                                                double userRating = 0;
+                                                foreach(var grade in post.UserRating){
+                                                    userRating+= grade.Grade;
+                                                }
+                                                userRating/=post.UserRating.Count;
+                                                <div class="p-2">
+                                                    <p>Users rating: @userRating</p>
+                                                </div>
+                                            }
+                                            else{
+                                                <div class = "p-2">
+                                                    <h5>Users rating: Be first!</h5>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -44,6 +91,9 @@
 </div>
 
 <script>
+    const $select = document.querySelector('#categorySelector');
+    $select.value = "@selectedCategory";
+
     var width = screen.availWidth;
     document.getElementById("contentSection").style.width = (0.75 * width) + 'px';
     document.getElementById("filterSection").style.width = (0.25 * width) + 'px';
