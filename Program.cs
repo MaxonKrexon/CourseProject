@@ -24,13 +24,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["60674425195-tikueg2dkbemcrp1bqjbv0igdg9054q8.apps.googleusercontent.com"];
-        options.ClientSecret = builder.Configuration["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"];
+        options.ClientId = "60674425195-tikueg2dkbemcrp1bqjbv0igdg9054q8.apps.googleusercontent.com";
+        options.ClientSecret = "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";
     })
     .AddMicrosoftAccount(options =>
     {
-        options.ClientId = builder.Configuration["86a02461-0e3e-4b72-9fd1-80b8e09c01da"];
-        options.ClientSecret = builder.Configuration["QeJ8Q~ZQiOWRV_ZaBS46mpNJeU0DDvmVCNx5qcHS"];
+        options.ClientId = "86a02461-0e3e-4b72-9fd1-80b8e09c01da";
+        options.ClientSecret = "QeJ8Q~ZQiOWRV_ZaBS46mpNJeU0DDvmVCNx5qcHS";
     });
 
 var app = builder.Build();

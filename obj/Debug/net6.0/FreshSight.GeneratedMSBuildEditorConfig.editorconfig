@@ -175,6 +175,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXMvSWRlbnRpdHkvUGFnZXMvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/home/maxon/Documents/FreshSight/sample.cshtml]
+build_metadata.AdditionalFiles.TargetPath = c2FtcGxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/maxon/Documents/FreshSight/Views/Blog/Blogger.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQmxvZy9CbG9nZ2VyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

@@ -22,7 +22,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var posts = _db.Posts.Include(p => p.UserRating).ToList();
+        var posts = _db.Posts.Include(p => p.UserRating).OrderByDescending(p => p.CreationTime).ToList();
         TempData["selectedCategory"] = "All";
         return View(posts);
     }
@@ -31,12 +31,12 @@ public class HomeController : Controller
     public IActionResult Index(String Category)
     {
         if(!Category.Contains("All")){
-            var posts = _db.Posts.Where(p => p.Category == Category).Include(p => p.UserRating).ToList();
+            var posts = _db.Posts.Where(p => p.Category == Category).Include(p => p.UserRating).OrderByDescending(p => p.CreationTime).ToList();
             TempData["selectedCategory"] = Category;
             return View(posts);
         }
         else{
-            var posts = _db.Posts.Include(p => p.UserRating).ToList();
+            var posts = _db.Posts.Include(p => p.UserRating).OrderByDescending(p => p.CreationTime).ToList();
             TempData["selectedCategory"] = "All";
             return View(posts);
         }

@@ -31,9 +31,7 @@ public class PostController : Controller
     {
         if (_signInManager.IsSignedIn(User))
         {
-            String postId = Guid.NewGuid().ToString();
-            System.IO.Directory.CreateDirectory($"wwwroot/uploaded/{postId}");
-            TempData["NewPostId"] = postId;
+            
             return View();
         }
         else
@@ -47,12 +45,12 @@ public class PostController : Controller
     {
         AppUser user = await _userManager.GetUserAsync(User);
 
-        String postId = TempData["NewPostId"].ToString();
+        String postId = Guid.NewGuid().ToString();
         post.ID = postId;
         post.Topic = Topic;
         post.Category = Category;
         post.AuthorGrade = Convert.ToDouble(authorGrade);
-        String textfile = $"wwwroot/uploaded/{postId}/_text";
+        String textfile = $"wwwroot/uploaded/_text";
         System.IO.File.CreateText(textfile);
         System.IO.File.WriteAllText(textfile, Text);
         UploadToCloud(post, user);
@@ -66,21 +64,20 @@ public class PostController : Controller
         String containerName = "posts";
         BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
 
-        String dir = $"wwwroot/uploaded/{post.ID}/";
+        String dir = $"wwwroot/uploaded/";
         var files = Directory.GetFiles(dir);
 
         foreach (var file in files)
         {
             using (MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(file)))
             {
-                String BlobName = post.ID + file.Split("/")[3];
+                String BlobName = post.ID + file.Split("/")[2];
                 containerClient.UploadBlob(blobName: BlobName, content: ms);
                 ms.Flush();
                 System.IO.File.Delete(file);
             }
 
         }
-        System.IO.Directory.Delete(dir);
         post.CreationTime = DateTime.Now.ToString();
         user.Posts.Add(post);
         _db.SaveChanges();
@@ -90,8 +87,7 @@ public class PostController : Controller
     public void UploadToServer()
     {
         var files = Request.Form.Files;
-        String postId = TempData["NewPostId"] as String;
-        String dir = $"wwwroot/uploaded/{postId}/";
+        String dir = $"wwwroot/uploaded/";
         int index = 0;
         foreach (var file in files)
         {

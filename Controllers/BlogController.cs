@@ -123,7 +123,6 @@ public class BlogController : Controller
             fs.Flush();
         }
         System.Diagnostics.Process.Start("pandoc", " sample.md -t html -o sample.cshtml");
-        System.IO.File.Delete("sample.md");
     }
 
     public IActionResult DeletePost(String postId)

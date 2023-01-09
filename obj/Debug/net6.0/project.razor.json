@@ -16348,6 +16348,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "/home/maxon/Documents/FreshSight/sample.cshtml",
+      "TargetPath": "sample.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "/home/maxon/Documents/FreshSight/Views/Blog/Index.cshtml",
       "TargetPath": "Views\\Blog\\Index.cshtml",
       "FileKind": "mvc"

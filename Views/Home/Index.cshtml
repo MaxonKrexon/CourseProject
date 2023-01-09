@@ -48,7 +48,12 @@
                                             if(blob.Name.Contains("thumb")){
                                                 String link = $"https://freshsightcloud.blob.core.windows.net/posts/{post.ID}_thumb";
                                                 <div class="p-2">
-                                                    <img src="@link" style="border-radius: 30px;" id="postPic">
+                                                    <img src="@link" style="border-radius: 30px;" id="postPic_@post.ID">
+                                                    <script>
+                                                        var width = screen.availWidth;
+                                                        document.getElementById("postPic_@post.ID").style.width = (0.2 * width) + 'px';
+                                                        document.getElementById("postPic_@post.ID").style.height = ((0.2 * width)*0.5625) + 'px';
+                                                    </script>
                                                 </div>
                                                 break;
                                             }
@@ -97,6 +102,5 @@
     var width = screen.availWidth;
     document.getElementById("contentSection").style.width = (0.75 * width) + 'px';
     document.getElementById("filterSection").style.width = (0.25 * width) + 'px';
-    document.getElementById("postPic").style.width = (0.2 * width) + 'px';
-    document.getElementById("postPic").style.height = ((0.2 * width)*0.5625) + 'px';
+    
 </script>
