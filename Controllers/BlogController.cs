@@ -47,7 +47,7 @@ public class BlogController : Controller
             return Redirect("~/Identity/Account/Login");
         }
     }
-    public String GetUserPic(AppUser user)
+    private String GetUserPic(AppUser user)
     {
         String containerName = "images";
         BlobContainerClient imagesCli = new BlobContainerClient(connectionString, containerName);
@@ -64,7 +64,7 @@ public class BlogController : Controller
     }
 
 
-    public String GetUserAge(AppUser user)
+    private String GetUserAge(AppUser user)
     {
         if (user.DateOfBirth != null)
         {
@@ -90,7 +90,7 @@ public class BlogController : Controller
         return View(post);
     }
 
-    public async Task<IActionResult> _gradesPartial(String postId){
+    private async Task<IActionResult> _gradesPartial(String postId){
         var grades = _db.UserGrades.Where(g => g.Post.ID == postId).Include(p => p.Author).ToList();
         var user = await _userManager.GetUserAsync(User);
         foreach(var grade in grades){
@@ -102,7 +102,7 @@ public class BlogController : Controller
         return View(grades);
     }
 
-    public IActionResult _CommentsPartial(String postId){
+    private IActionResult _CommentsPartial(String postId){
         var comments = _db.Comments.Where(c => c.Post.ID == postId).Include(c => c.Author).OrderBy(c => c.CreationTime).ToList();
         return View(comments);
     }
@@ -112,7 +112,7 @@ public class BlogController : Controller
         _CommentsPartial(postId);
     }
 
-    public void _textPartial(String postId){
+    private void _textPartial(String postId){
         var containerName = "posts";
         var textBlob = new BlockBlobClient(connectionString, containerName, $"{postId}_text");
         var textBlock = textBlob.DownloadContent();
@@ -145,7 +145,7 @@ public class BlogController : Controller
         return RedirectToAction("Index", "Blog");
     }
 
-    public async void DeleteFromCloud(String postId)
+    private async void DeleteFromCloud(String postId)
     {
         String containerName = "posts";
         BlobContainerClient postsCli = new BlobContainerClient(connectionString, containerName);
@@ -172,7 +172,7 @@ public class BlogController : Controller
         return View(author);
     }
 
-    public IActionResult _bloggerPosts(AppUser author){
+    private IActionResult _bloggerPosts(AppUser author){
         var posts = _db.Posts.Where(p => p.Author == author).Include(p => p.UserRating).ToList();
         return View(posts);
     }

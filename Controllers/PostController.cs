@@ -57,7 +57,7 @@ public class PostController : Controller
         return RedirectToAction("Index", "Blog");
     }
 
-    public async void UploadToCloud(Post post, AppUser user)
+    private async void UploadToCloud(Post post, AppUser user)
     {
         post.Author = user;
 
